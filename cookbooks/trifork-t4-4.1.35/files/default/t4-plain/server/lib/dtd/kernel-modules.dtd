@@ -1,0 +1,27 @@
+<!--
+  DTD for Trifork Kernel architecture
+-->
+
+<!ELEMENT kernel-config (system, kernel)>
+
+<!ELEMENT kernel (property*, kernlet*)>
+<!ATTLIST kernel
+ class CDATA #REQUIRED
+>
+
+<!ELEMENT kernlet (property*, kernlet*)>
+<!ATTLIST kernlet
+ class CDATA #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+ name  CDATA #REQUIRED
+ value CDATA #REQUIRED
+ when CDATA "init"
+>
+
+
+<!ELEMENT classpath (#PCDATA)>
+
+<!ELEMENT system (property*,classpath*)>

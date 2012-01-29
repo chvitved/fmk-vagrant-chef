@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ x$OS = "xWindows_NT" ] ; then
+    TRIFORK_INSTALL_DIR=`cygpath -iw $TRIFORK_INSTALL_DIR`
+    TRIFORK_DOMAIN_DIR=`cygpath -iw $TRIFORK_DOMAIN_DIR`
+    JAVA_HOME=`cygpath -iw $JAVA_HOME`
+    exec `cygpath -u $COMSPEC` /c ant.cmd $*
+fi
+
+ANT_HOME=$TRIFORK_INSTALL_DIR/ant
+export ANT_HOME
+
+CLASSPATH=$TRIFORK_INSTALL_DIR/lib/jdtCompilerAdapter.jar:$TRIFORK_INSTALL_DIR/lib/jdtcore.jar:$CLASSPATH
+export CLASSPATH
+
+exec $TRIFORK_INSTALL_DIR/ant/bin/ant $*

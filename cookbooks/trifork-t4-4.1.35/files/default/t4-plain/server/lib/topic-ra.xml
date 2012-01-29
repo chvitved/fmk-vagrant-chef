@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE connector PUBLIC '-//Sun Microsystems, Inc.//DTD Connector 1.0//EN' 'http://java.sun.com/dtd/connector_1_0.dtd'>
+
+<connector>
+    <display-name>JMS/XA TopicConnector</display-name>
+    <vendor-name>Trifork</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>JMS Provider</eis-type>
+    <version>1.0</version>
+    <resourceadapter>
+
+        <managedconnectionfactory-class>com.trifork.eas.jmsconnect.TopicConnector</managedconnectionfactory-class>
+        <connectionfactory-interface>javax.jms.TopicConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>com.trifork.eas.jmsconnect.TopicConnectionFactoryHandle</connectionfactory-impl-class>
+        <connection-interface>javax.jms.TopicSession</connection-interface>
+        <connection-impl-class>com.trifork.eas.jmsconnect.TopicSessionHandle</connection-impl-class>
+        <transaction-support>XATransaction</transaction-support>
+
+	<!-- There are two ways to configure this JMS Connector.  One is using a connectionURL;
+             the alternative is to set connectorInitializerClass (and connectorInitializerProperties). -->
+
+	<!-- 
+	     If set, this typically replaces serverHost:portNumber
+	 -->
+        <config-property>
+            <config-property-name>connectionURL</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value></config-property-value>
+        </config-property>
+
+	<!-- 
+	     PROPERTY: ObjectFactoryClass
+	     If set, this is the name of a class implementing javax.naming.spi.ObjectFactory,
+	     which will be created with a no-arg constructor; following which the method
+	     getObjectInstance will be called.  That method should return an instance of
+	     XATopicConnectionFactory.  
+
+	     ObjectFactory.getObjectInstance(obj,name,nameCtx,environment)
+	     will be called with the following arguments:
+
+	       obj 		The instance of ManagedConnctionFactory
+	       name		Null
+	       nameCtx		The default InitialContext for this server environment
+	       environment	the set of properties specified in connectorInitializerProperties
+	 -->
+        <config-property>
+            <config-property-name>connectorInitializerClass</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>ThisValueShouldBeOverridden</config-property-value>
+        </config-property>
+
+	<!-- 
+	     PROPERTY: ObjectFactoryProperties
+
+	     If set, the set of properties passed to the ObjectFactory (see above).
+	     The method Properties.load() is used to 
+        -->
+        <config-property>
+            <config-property-name>connectorInitializerProperties</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value></config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>serverName</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value></config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>portNumber</config-property-name>
+            <config-property-type>java.lang.Integer</config-property-type>
+            <config-property-value>0</config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>userName</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value></config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>password</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value></config-property-value>
+        </config-property>
+
+        <config-property>
+            <config-property-name>maxConnections</config-property-name>
+            <config-property-type>java.lang.Integer</config-property-type>
+            <config-property-value>0</config-property-value>
+        </config-property>
+
+        <authentication-mechanism>
+            <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
+            <credential-interface>javax.resource.security.PasswordCredential</credential-interface>
+        </authentication-mechanism>
+
+        <reauthentication-support>false</reauthentication-support>
+    </resourceadapter>
+</connector>

@@ -1,0 +1,53 @@
+#!/bin/bash
+
+HOST=localhost
+COMMAND=
+until `exit $#`;
+do
+  case $1 in
+    -host | --host)
+    COMMAND=$COMMAND' '$1
+    shift
+    HOST=$1
+    COMMAND=$COMMAND' '$1
+    ;;
+
+    *)
+    COMMAND=$COMMAND' '$1
+    ;;
+esac;
+shift
+done
+
+LAUNCHER_INSTALL_DIR=
+LAUNCHER_REPOSITORY_DIR=$HOME/.trifork-client/repository
+
+TRIFORK_INSTALL_DIR=$LAUNCHER_REPOSITORY_DIR/system/$HOST
+
+if [ -z $TRIFORK_INSTALL_DIR/client-launcher/lib ]
+then
+  cp -u $TRIFORK_INSTALL_DIR/client-launcher/lib/* $LAUNCHER_INSTALL_DIR/lib
+fi
+
+OS=`uname`
+if [ "$OS" = "Linux" ]
+  then
+  LD_LIBRARY_PATH="$LAUNCHER_REPOSITORY_DIR/system/$HOST/lib/linux-i386:$LD_LIBRARY_PATH"
+elif [ "$OS" = "SunOS" ]
+  then
+    if [ "$PLATFORM" = "sparc" ]
+    then
+      LD_LIBRARY_PATH="$LAUNCHER_REPOSITORY_DIR/system/$HOST/lib/solaris-sparc:$LD_LIBRARY_PATH"
+    elif [ "$PLATFORM" = "i386" ]
+    then
+      LD_LIBRARY_PATH="$LAUNCHER_REPOSITORY_DIR/system/$HOST/lib/solaris-i386:$LD_LIBRARY_PATH"
+    fi
+else
+  echo "Unknown Operating System: $OS. Exiting..."
+  exit -1;
+fi
+export LD_LIBRARY_PATH
+
+java -Dtrifork.client.config.dir=$TRIFORK_INSTALL_DIR/client-config -Dlauncher.install.dir=$LAUNCHER_INSTALL_DIR -Dlauncher.repository.dir=$LAUNCHER_REPOSITORY_DIR -Dtrifork.install.dir=$TRIFORK_INSTALL_DIR -Dtrifork.domain.dir=$TRIFORK_INSTALL_DIR -Djava.ext.dirs=$TRIFORK_INSTALL_DIR/lib/ext:$TRIFORK_INSTALL_DIR/lib -Djava.endorsed.dirs=$TRIFORK_INSTALL_DIR/lib/endorsed -jar $LAUNCHER_INSTALL_DIR/lib/ClientLauncher.jar $COMMAND
+sh $TRIFORK_INSTALL_DIR/runclient.sh
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+        <!-- Setup appenders -->
+        <appender name="CLIENT_LOG" class="org.apache.log4j.ConsoleAppender">
+           <param name="ImmediateFlush" value="true"/>
+           <layout class="org.apache.log4j.PatternLayout">
+             <param name="ConversionPattern" value="%-5p %m%n"/>
+           </layout>  
+        </appender>
+        <!-- This section can be used to redirect client loggings to a file -->
+        <!--
+        <appender name="CLIENT_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="trifork-client.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="10MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%d %-5p %m%n"/>
+           </layout>	    
+	</appender>
+        -->
+ 
+        <!-- Setup trifork-client.log -->
+ 	<category name="com.trifork" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="CLIENT_LOG" />
+        </category>  	
+ 	<category name="dk.eos" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="CLIENT_LOG" />
+        </category>  	
+
+        <root>
+           <priority value ="debug" />
+           <appender-ref ref="CLIENT_LOG" />
+        </root>
+
+</log4j:configuration>

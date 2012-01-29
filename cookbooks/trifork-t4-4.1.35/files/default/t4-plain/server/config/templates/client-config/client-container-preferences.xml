@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE preferences SYSTEM 'http://java.sun.com/dtd/preferences.dtd'>
+
+<preferences EXTERNAL_XML_VERSION="1.0">
+  <root type="system">
+    <map />
+    <node name="com.trifork.eas">
+      <map />
+            <node name="clientcontainer">
+              <map>
+                <entry key="kernlet.classname" value="com.trifork.eas.client.ClientKernel" />
+              </map>
+              <node name="kernlets">
+                <map />
+                
+                
+                <node name="JDBCPool">
+                  <map>
+                    <entry key="kernlet.classname" value="com.trifork.eas.jdbcpool.JdbcPoolKernlet" />
+                    <entry key="loadDataSourcesOnStartup" value="false"/>
+                  </map>
+                </node>
+                
+                <node name="JTA">
+                  <map>
+                    <entry key="JTSName" value="com/trifork/JTS" />
+                    <entry key="kernlet.classname" value="com.trifork.eas.jta.JTAKernlet" />
+                  </map>
+                </node>
+                
+                <node name="LOG">
+                  <map>
+                    <entry key="kernlet.classname" value="com.trifork.eas.log.Log4jKernlet" />
+                  </map>
+                </node>
+                
+                <node name="NamingKernlet">
+                  <map>
+                    <entry key="cosBinding" value="false" />
+                    <entry key="hostExternalNamingManager" value="false" />
+                    <entry key="kernlet.classname" value="com.trifork.eas.naming.COSINSBasedNamingModule" />
+                  </map>
+                </node>
+                <node name="ORB">
+                  <map>
+                    <entry key="kernlet.classname" value="com.trifork.eas.orb.DefaultOrbKernlet" />
+                    <entry key="orbInitializerClasses" value="com.trifork.eas.jts.JTSLoader:com.trifork.eas.csi.CSILoader" />
+                  </map>
+                </node>
+                
+                <node name="ClientContainerKernlet">
+                  <map>
+                    <entry key="kernlet.classname" value="com.trifork.eas.client.DefaultClientContainer" />
+                  </map>
+
+                  <node name="kernlets">
+                    <map />
+                    <node name="AppClientAdmin">
+                      <map>
+                       <entry key="kernlet.classname" value="com.trifork.eas.appclientadmin.client.AppClientAdminClientKernlet" />
+                      </map>
+                    </node>                
+                  </node>
+                </node>
+              </node>
+ </node>
+    </node>
+  </root>
+</preferences>

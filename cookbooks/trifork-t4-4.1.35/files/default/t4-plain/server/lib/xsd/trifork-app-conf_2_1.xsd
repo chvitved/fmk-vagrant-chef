@@ -1,0 +1,1596 @@
+<xsd:schema
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  targetNamespace='http://trifork.com/j2ee/xsd/trifork-app-conf_2_1'
+  xmlns='http://trifork.com/j2ee/xsd/trifork-app-conf_2_1'>
+
+
+<xsd:simpleType name="EnableType">
+  <xsd:restriction base="xsd:token">
+    <xsd:enumeration value="Enable"/>
+    <xsd:enumeration value="Disable"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="tcpPortNumber">
+  <xsd:restriction base="xsd:integer">
+    <xsd:minInclusive value="0"/>
+    <xsd:maxInclusive value="32768"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="supportedLevel">
+  <xsd:restriction base="xsd:token">
+	<xsd:enumeration value="NONE"/>
+	<xsd:enumeration value="INTEGRAL"/>
+	<xsd:enumeration value="CONFIDENTIAL"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+ <xsd:element name='trifork-app-conf'>
+ <xsd:annotation>
+ 	<xsd:documentation>
+ 		This is the root element of the Trifork application
+ 		configuration descriptor.
+ 	</xsd:documentation>
+ </xsd:annotation>
+ <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='app-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='role-mapping' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='web-app' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='enterprise-beans' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='relationships' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='application-client' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='connector' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='ejb-jar' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='application-client'>
+   <xsd:annotation>
+ 	<xsd:documentation>
+ 		The application-client element adds information to an
+ 		application-client element in the portable descriptor
+ 		(application.xml). Matching is done on based on the uri element
+ 	</xsd:documentation>
+ </xsd:annotation>
+ <xsd:complexType>
+ 	<xsd:sequence>
+ 		<xsd:element ref='uri' minOccurs='0' maxOccurs='1' />
+ 		<xsd:element ref='env-entry' minOccurs='0'
+ 			maxOccurs='unbounded' />
+ 		<xsd:element ref='ejb-ref' minOccurs='0' maxOccurs='unbounded' />
+ 		<xsd:element ref='resource-ref' minOccurs='0'
+ 			maxOccurs='unbounded' />
+ 		<xsd:element ref='resource-env-ref' minOccurs='0'
+ 			maxOccurs='unbounded' />
+ 		<xsd:element ref='service-ref' minOccurs='0'
+ 			maxOccurs='unbounded' />
+ 	</xsd:sequence>
+ </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='callrouter-classname' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The callrouter-classname element specifies a class name for
+ 			usage as load balancing algorithm for the ejb.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='clustered'>
+    <xsd:annotation>
+    	<xsd:documentation>
+    		The clustered element specifies clustering properties for the
+    		bean.
+    	</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+ 	<xsd:sequence>
+ 		<xsd:element ref='callrouter-classname' minOccurs='0'
+ 			maxOccurs='1' />
+ 	</xsd:sequence>
+ </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='cmp'>
+   <xsd:annotation>
+   	<xsd:documentation>
+   		This element describes runtime information for a CMP
+   		EntityBean object for EJB1.1 and EJB2.0 beans.
+   	</xsd:documentation>
+   </xsd:annotation>
+   <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='table-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-field' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='sql-statement' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='create-table-deploy' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='delete-table-undeploy' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='is-modified-method' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-finder-prefetch' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-select-for-update' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-transaction-local-cache' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-validate-fields' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-cache' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='cmp-finder-prefetch' type="EnableType">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element is used to enable/disable an optimization
+ 			where ejb state is eagerly read as part of running finders.
+
+			Vaild values: Enable (default) or Disable.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-transaction-local-cache' type="EnableType">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element is used to enable/disable a transaction-local
+ 			cache of all loaded CMP state for this bean. This can be
+ 			diabled if read_committed semantics is preferred.
+
+ 			Vaild values: Enable (default) or Disable
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-select-for-update' type="EnableType">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element is used to enable/disable using SELECT ... FOR
+ 			UPDATE to implement ejbLoad semantics.
+
+ 			Vaild values: Enable or Disable (default)
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-cache'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='cmp-cache-timeout'/>
+    <xsd:element ref='cmp-cache-size'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='cmp-validate-reads'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This field is used to enable DBMS-verified reads, which will
+  		issue a SELECT ... FOR UPDATE to verify the existence of a
+  		record that has been read but not updated or deleted.
+
+  		If this field has the value of "None", then no validation
+  		takes place. A value of "All" causes this to apply to all
+  		CMP's which have been loaded, but not changed; and "Cached"
+  		implies that read-validation only is used when the valus is
+  		obtained from a global cache.
+
+  		Vaild values: All, Cached, None (default)
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:token">
+    <xsd:enumeration value="All"/>
+    <xsd:enumeration value="Cached"/>
+    <xsd:enumeration value="None"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:element>
+
+ <xsd:element name='cmp-cache-timeout' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The cmp-cache-timeout describes the number of MINUTES a cmp
+ 			cache entry is valid.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-cache-size' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation></xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-validate-fields'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The cmp-validate-fields element identifies fields that must be
+  		validated for a CMP EntityBean as a concequence of EJBStore.
+  		If this tag is specified, fields are validated when issuing an
+  		SQL UPDATE, by adding a WHERE clause that checks values as
+  		known in ejbLoad. Optionaly, DBMS-verfied reads are performned
+  		if cmp-validate-reads is specified to either All or Cached.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='cmp-validate-reads' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp-optimistic-lock' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='field-name' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='cmp-optimistic-lock'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='field-type'/>
+    <xsd:element ref='db-field-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='db-field-type' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='field-type' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Used to specify the java-level type used to represent the
+ 			optimistic lock. If this is omitted, the field-class
+ 			defaults to java.lang.Long. Valid values are
+ 			java.lang.Integer, java.lang.Long and java.math.BigDecimal.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='cmp-field'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The cmp-field element makes it possible to override the
+  		default choices of database column name and type for a
+  		cmp-field defined in the corresponding ejb-jar.xml descriptor
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='field-name'/>
+    <xsd:element ref='db-field-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='db-field-type' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='cmp-resource'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The cmp-resource element describes a named resource to be used
+  		by CMP.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='jndi-name'/>
+    <xsd:element ref='resource-principal' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='context-root' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation></xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='create-table-deploy' type="xsd:boolean">
+ 	<xsd:annotation>
+ 		<xsd:documentation>    
+          This element indicates whether to create the cmp table during
+          deployment or not.
+        </xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='db-field-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specify the database column name for a cmp field.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='db-field-type' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specify the database column type (the SQL type) for a cmp
+ 			field.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='default-host' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Identifies the default value for the HTTP header 'Host:' to
+ 			use for constructing external URLs, e.g. for redirects.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='delete-table-undeploy' type="xsd:boolean">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates whether to delete the cmp table
+ 			during undeployment of the entity bean.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='monitored-file' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			If this application is deployed to a system container which
+ 			has the 'auto restart' option enabled, add this file to the
+ 			list of monitored files.
+
+ 			The path specified is relative to the root of the war/jar
+ 			holding the application.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='ejb'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The ejb element adds information to an ejb element in the
+  		portable descriptor (ejb-jar.xml). Matching is done on the
+  		values of the ejb-name elements.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb-name'/>
+    <xsd:element ref='jndi-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='cmp' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='mdb-durable-subscription-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='mdb-connection-factory' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='ior-security-config' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='max-pool-size' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='default-pool-size' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='pool-timeout' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='idle-timeout' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='max-concurrent-instances' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='env-entry' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='ejb-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-env-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='webservice-endpoint' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='activation-config' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='clustered' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='activation-config'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specify which resource adapter (connector) to use for in-bound
+  		messaging to this bean, and specify configuration properties
+  		for this association.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='resource-adapter-name'/>
+    <xsd:element ref='resource-principal' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='activation-config-property' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='resource-adapter-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Identify the resource adapter; should match the
+ 			"display-name" of a connector deployed to the system.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='activation-config-property'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Define values for properties defined in the connector's
+  		inbound definition.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='activation-config-property-name'/>
+    <xsd:element ref='activation-config-property-value'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='activation-config-property-name' type="xsd:token"/>
+
+ <xsd:element name='activation-config-property-value' type="xsd:string"/>
+
+ <xsd:element name='ejb-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifies the name of an enterprise bean.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='ejb-ref'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The ejb-ref element binds an ejb reference to a jndi name.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb-ref-name'/>
+    <xsd:element ref='jndi-name'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='ejb-ref-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The ejb-ref-name element links an ejb-ref element to a
+ 			ejb-ref element in the corresponding portable descriptor
+ 			(application-client.xml, ejb-jar.xml or web.xml).
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='endpoint' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The endpoint element identifies an HTTP, HTTPS or AJPv13
+ 			endpoint by name.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='enterprise-beans'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The enterprise-beans element groups ejb and cmp-resource
+  		elements.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='cmp-resource' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='message-destination' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='webservice-description' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='env-entry'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The env-entry element contains the declaration of an
+  		enterprise bean's environment entry. The declaration consists
+  		of an optional description, the name of the environment entry,
+  		and an optional value.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='env-entry-name'/>
+    <xsd:element ref='env-entry-type'/>
+    <xsd:element ref='env-entry-value' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='env-entry-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The env-entry-name element contains the name of an
+ 			enterprise bean's environment entry.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='env-entry-type' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The env-entry-type element contains the fully-qualified
+ 			Java type of the environment entry value that is expected
+ 			by the enterprise bean's code.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='env-entry-value' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The env-entry-value element contains the value of an
+ 			enterprise bean's environment entry. The value must be a
+ 			String that is valid for the constructor of the specified
+ 			type that takes a single String parameter.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='field-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifies the database column name for for a CMP field.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='iiop-port' type="tcpPortNumber">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Optional. This element indicates the port number to use for
+ 			IIOP transport. This value is only meaningful if none of
+ 			integrity, confidentiality and establish-trust members are
+ 			set to REQUIRED. Default value is 0 meaning that the port
+ 			is dynamically allocated.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='is-modified-method' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifies the name of a no-arg method on the CMP bean class
+ 			with return type boolean. This method should return true
+ 			only if the persistent fields of the CMP bean instance has
+ 			been modified, and thus need to be stored.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='jndi-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The jndi-name element specifies a jndi name.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='mail-from' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This node holds the address of the sender.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='mail-host' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This node holds the mail to information of a JavaMail
+ 			session object.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='mail-resource-conf'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This is the root element describing the runtime bindings of a
+  		mail resource reference.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='name'/>
+    <xsd:element ref='mail-from'/>
+    <xsd:element ref='mail-host'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='mdb-connection-factory'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This element describes the connection factory to use for a
+  		particular message driven bean. Used in EJB.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='jndi-name'/>
+    <xsd:element ref='resource-principal' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='mdb-durable-subscription-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element describes the name of the durable subscription
+ 			for an MDB. Used in EJB.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='method'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specifes a method. See the description of the method element
+  		in ejb-jar_2_0.dtd for details.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='method-intf' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='method-name'/>
+    <xsd:choice>
+     <xsd:element ref='method-params'/>
+     <xsd:element ref='method-signature'/>
+    </xsd:choice>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='method-intf'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specifes how to locate a method. See the description of the
+  		method-intf element in ejb-jar_2_0.dtd for details.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:token">
+	<xsd:enumeration value="Home"/>
+	<xsd:enumeration value="Remote"/>
+	<xsd:enumeration value="LocalHome"/>
+	<xsd:enumeration value="Local"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:element>
+
+ <xsd:element name='method-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifes a method name. See the description of the
+ 			method-name element in ejb-jar_2_0.dtd for details.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='method-param' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifes a method parameter. See the description of the
+ 			method-param element in ejb-jar_2_0.dtd for details.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='method-params'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specifes a list of method parameters. See the description of
+  		the method-params element in ejb-jar_2_0.dtd for details.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='method-param' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='method-signature' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifes a comma separated list of named method parameters.
+ 			Example:
+ 			<method-signature>int x, String y</method-signature>
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This text nodes holds a name string.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='password' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specify a password string
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='persistent-sessions' type="xsd:boolean">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifies whether web sessions should be saved and restored
+ 			to/from persistent storage when system container or server
+ 			is stopped and started. This feature is disabled by
+ 			default.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='principal' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This node describes a username on the platform.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='principals'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node holds a list of usernames.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='principal' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='ejb-relation'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Input to the SQL mapping of a particular CMR relation.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb-relation-name'/>
+    <xsd:element ref='table-name' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='ejb-relationship-role' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='ejb-relation-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of an ejb relation. Must match a ejb-relation-name
+ 			in the corresponding ejb-jar.xml.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='ejb-relationship-role'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Input to the SQL mapping of a single role (=side) of a CMR
+  		relation.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='relationship-role-source'/>
+    <xsd:element ref='destination-key' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='relationship-role-source'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Identifies a role (=side) of a CMR relation
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb-name'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='destination-key'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Identifies a primary key that corresponds to the entity
+  		referenced by this ejb-relationsship-role.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='cmp-field' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='relationships'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Input to the SQL mapping of CMR (Container Managed
+  		Relationships)
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='ejb-relation' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='res-ref-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of a resource reference.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='resource-env-ref'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Attach a jndi-name to a resource-env-ref defined in the
+  		portable descriptor (application-client.xml, ejb-jar.xml or
+  		web.xml).
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='resource-env-ref-name'/>
+    <xsd:element ref='jndi-name'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='resource-env-ref-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of a resource-env-ref. The resource-env-ref-name
+ 			element must match the resource-env-ref-name of a
+ 			resource-env-ref in the portable descriptor
+ 			(application-client.xml, ejb-jar.xml or web.xml).
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='resource-principal'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Groups a name and a password
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='principal'/>
+    <xsd:element ref='password'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='resource-ref'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node holds all the runtime bindings of a resource
+  		reference.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='res-ref-name'/>
+    <xsd:element ref='jndi-name'/>
+    <xsd:element ref='resource-principal' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='mail-resource-conf' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-ref-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of a service reference.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='wsdl-override' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name/URL of a wsdl file to used instead of the one
+ 			specified in the service-ref in the standard deployment
+ 			descriptor
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='service-ref'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node holds all the runtime bindings of a web service
+  		reference.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='service-ref-name'/>
+    <xsd:element ref='port-info' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='wsdl-override' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='webservice-description-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of a webservice description
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='wsdl-publish-location' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specifies where the WSDL file for the web service should be
+ 			published
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='webservice-description'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node holds the runtime bindings of a web service.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='webservice-description-name'/>
+    <xsd:element ref='wsdl-publish-location' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='message-destination'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Describe binding for a message destination
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='message-destination-name'/>
+    <xsd:element ref='jndi-name'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='message-destination-name' type="xsd:token"/>
+
+ <xsd:element name='port-info'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specify additional information about a web service port
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='service-endpoint-interface' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='wsdl-port' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='stub-property' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-endpoint-interface' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of the service endpoint interface for this port
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='wsdl-port'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The name of the port in the WSDL file
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='namespaceURI'/>
+    <xsd:element ref='localpart'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='namespaceURI' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The namespaceURI part of a QName
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='localpart' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>The localpart of a QName</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='webservice-endpoint'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The webservice-endpoint adds web service information to a
+  		specific session bean. The session bean must be linked to from
+  		a webservices.xml deployment descriptor in order for this data
+  		to have effect.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='port-component-name'/>
+    <xsd:element ref='endpoint-address-uri'/>
+    <xsd:element ref='login-config' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='transport-guarantee' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='port-component-name' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The name of the port component this web service enabled
+ 			session bean is associated with
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='endpoint-address-uri' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			An URI specifying where the web service enabled session
+ 			bean should be available. The format should be:
+ 			contextroot/mapping
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='login-config'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Specify how authentication is performed for the EJB webservice
+  		invocation
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='auth-method'/>
+    <xsd:element ref='realm' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='transport-guarantee' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Set the transport guaratee for this web service endpoint -
+ 			refere to the transport-guarantee tag for servlets for more
+ 			information. Allowable values are: NONE, INTEGRAL and
+ 			CONFIDENTIAL If not specified, the behavior is equivalent
+ 			to NONE
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='stub-property'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		A property to be set on a web service stub
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='name'/>
+    <xsd:element ref='value'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='value' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This text nodes holds a value string.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='role'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node holds the mapping of a role to a list of users and
+  		user-groups.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='principals'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:NMTOKEN' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='role-mapping'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The name attribute of a role is the rolename of that role.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='role' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='sql' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The text of this node is an SQL statement for a CMP finder
+ 			method.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='sql-statement'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This node associates an sql statement with a method. The
+  		method may be a finder/ejbSelect method (so the method element
+  		would be the same as in the EJB2.0 DTD).
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='method'/>
+    <xsd:element ref='sql'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='app-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>Specify application name</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='table-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Specify the database table name representing the state of a
+ 			CMP entity bean.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='uri' type="xsd:string"/>
+
+ <xsd:element name='web-app'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The web-app element adds information to an web-app element in
+  		the portable descriptor (web.xml). Matching is done on based
+  		on the uri element elements.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='uri' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='context-root' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='persistent-sessions' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='endpoint' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='env-entry' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='ejb-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-env-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-ref' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='message-destination' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='webservice-description' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='monitored-file' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='ejb-jar'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The ejb-jar element adds information to an ejb-jar element in
+  		the portable descriptor (ejb-jar.xml). Matching is done on
+  		based on the uri element elements.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='uri' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='ior-security-config'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This is the element describing security configuration
+  		information for the IOR.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='transport-config' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='as-context' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='sas-context' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='transport-config'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='integrity' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='confidentiality' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='establish-trust-in-target' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='establish-trust-in-client' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='iiop-port' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='ssl-iiop-port' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='integrity' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates if the target supports integrity
+ 			protected messages.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='confidentiality' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates if the target supports privacy
+ 			protected messages.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='establish-trust-in-target' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates if the target is capable of
+ 			authenticating to a client.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='establish-trust-in-client' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates if the target is capable of
+ 			authenticating a client.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='as-context'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This is the element describing the authentication mechanism
+  		that will be used to authenticate the client. If specified it
+  		will be the username-password mechanism.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='auth-method'/>
+    <xsd:element ref='realm'/>
+    <xsd:element ref='required'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='required' type="xsd:boolean">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element specifies if the authentication method
+ 			specified is required to be used for client authentication.
+ 			If so the EstablishTrustInClient bit will be set in the
+ 			target_requires field of the AS_Context. The element value
+ 			is either true or false.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='auth-method'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This element can be used in two ways: If used in an as-context
+  		element it describes the authentication method. In this case
+  		the only supported value is USERNAME_PASSWORD If used in a
+  		login-config element it describes the auth method for this web
+  		service endpoint - refere to the auth-method tag for servlets
+  		for more information. In this case the allowable values are:
+  		BASIC or CLIENT_CERT
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:token">
+    <xsd:enumeration value="USERNAME_PASSWORD"/>
+    <xsd:enumeration value="BASIC"/>
+    <xsd:enumeration value="CLIENT_CERT"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:element>
+
+ <xsd:element name='realm' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element describes the realm in which the user is
+ 			authenticated.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='sas-context'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This element describes the sas-context fields.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='caller-propagation'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='caller-propagation' type="supportedLevel">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element indicates if the target will accept propagated
+ 			caller identities The values are NONE, SUPPORTED or
+ 			REQUIRED.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='max-pool-size' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element describes the maximum pool size to be kept for
+ 			an EJB.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='default-pool-size' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element describes the number of instances to load into
+ 			an EJB pool when the container is started.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='pool-timeout' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This elemenent describes how long (in seconds) a EJB
+ 			component instance is kept live in the pool. After this
+ 			timeout, the pooled instance is discarded.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='idle-timeout' type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This element describes how long (in millis) a stateful
+ 			session bean is kept alive if there is no explicit call to
+ 			remove.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='max-concurrent-instances'
+ 	type="xsd:nonNegativeInteger">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			This elemenent defines the maximum number of concurrent mdb
+ 			instances.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='ssl-iiop-port' type="tcpPortNumber">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			Optional. This element indicates the port number to use for
+ 			SSL IIOP transport. This value is only meaningful if at
+ 			least one of integrity, confidentiality and establish-trust
+ 			members are set to SUPPORTED or REQUIRED. Default value is
+ 			0 meaning that the port is dynamically allocated.
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='connector'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The element connector is used to assign a jndi-name to a
+  		connector, and to override the values of config-properties
+  		defined in the portable descriptor.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='uri' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='config-property' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='outbound-resourceadapter' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='outbound-resourceadapter'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		This element is present if the connector provides outbound
+  		connectivity i.e., provides resources bound in jndi that
+  		component-level code can access via java:comp/env resource-ref
+  		entries.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='connection-definition' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='connection-definition'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		Defines properties (most importantly jndi name) for a specific
+  		connection definition.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='uri' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='jndi-name'/>
+    <xsd:element ref='config-property' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='id' type='xsd:ID' use='optional'>
+   	<xsd:annotation>
+   		<xsd:documentation>
+   			Identifies individual connection-definition
+   			specifications
+   		</xsd:documentation>
+   	</xsd:annotation>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='config-property'>
+  <xsd:annotation>
+  	<xsd:documentation>
+  		The element config-property contains a declaration of a single
+  		configuration property for a ManagedConnectionFactory
+  		instance.
+
+  		Each ManagedConnectionFactory instance creates connections to
+  		a specific EIS instance based on the properties configured on
+  		the ManagedConnectionFactory instance. The configurable
+  		properties are specified only once in the deployment
+  		descriptor, even though a resource adapter can be used to
+  		configure multiple ManagedConnnection- Factory instances (that
+  		create connections to different instances of the same EIS).
+
+  		The declaration consists of an optional description, name,
+  		type and an optional value of the configuration property. If
+  		the resource adapter provider does not specify a value than
+  		the deployer is responsible for providing a valid value for a
+  		configuration property.
+
+  		Any bounds or well-defined values of properties should be
+  		described in the description element.
+  	</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='config-property-name'/>
+    <xsd:element ref='config-property-type' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='config-property-value'/>
+   </xsd:sequence>
+   <xsd:attribute name='binding'>
+    <xsd:annotation>
+    	<xsd:documentation>
+    		This attribute controls binding behavior for this config
+    		property. 
+    		null: the property will be assigned the value NULL
+    		none: the property will not be assigned (setXXX will not be
+    		      called) 
+    		value: the property is bound to the specified value
+    	</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='null'/>
+      <xsd:enumeration value='none'/>
+      <xsd:enumeration value='value'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='config-property-name' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The element config-property-name contains the name of a
+ 			configuration property.
+
+ 			The connector architecture defines a set of well-defined
+ 			properties all of type java.lang.String. These are as
+ 			follows:
+ 			<config-property-name>ServerName</config-property-name>
+ 			<config-property-name>PortNumber</config-property-name>
+ 			<config-property-name>UserName</config-property-name>
+ 			<config-property-name>Password</config-property-name>
+ 			<config-property-name>ConnectionURL</config-property-name>
+
+ 			A resource adapter provider can extend this property set to
+ 			include properties specific to the resource adapter and its
+ 			underlying EIS.
+
+ 			Example:
+ 			<config-property-name>ServerName</config-property-name>
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='config-property-type' type="xsd:token">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The element config-property-type contains the fully
+ 			qualified Java type of a configuration property as required
+ 			by ManagedConnection- Factory instance.
+
+ 			The following are the legal values of config-property-type:
+ 			java.lang.Boolean, java.lang.String, java.lang.Integer,
+ 			java.lang.Double, java.lang.Byte, java.lang.Short,
+ 			java.lang.Long, java.lang.Float, java.lang.Character
+
+ 			Example:
+ 			<config-property-type>
+ 				java.lang.String
+ 			</config-property-type>
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+
+ <xsd:element name='config-property-value' type="xsd:string">
+ 	<xsd:annotation>
+ 		<xsd:documentation>
+ 			The element config-property-value contains the value of a
+ 			configuration entry.
+
+ 			Example:
+ 			<config-property-value>WombatServer</config-property-value>
+ 		</xsd:documentation>
+ 	</xsd:annotation>
+ </xsd:element>
+</xsd:schema>

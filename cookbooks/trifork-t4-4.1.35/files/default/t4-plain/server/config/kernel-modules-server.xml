@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE kernel-config PUBLIC "Trifork Kernel Modules" "http://www.trifork.com/dtds/eas/kernel-modules.dtd">
+
+<kernel-config>
+  <system>
+    <property 
+          name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.eas.jts.JTSLoader"
+          value="42" />
+
+    <property name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.eas.csi.CSILoader"
+	      value="42" />
+ 
+    <property name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.rmi.impl.RMIInterceptor"
+	      value="42" />
+ 
+    <property name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.eas.naming.corba.Loader"
+	      value="42" />
+
+    <property name="trifork.naming.cosbinding" value="true" />
+
+    <classpath>
+      ${trifork.install.dir}/lib/security.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/modelbuilder.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jmxtools.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/ejbcontainer.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/webcontainer.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/bytecode.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/rmi.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/cmp.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/corba.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/easmail.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jta.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/hsqldb.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/orb.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/management.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/naming.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/repository.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/http.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/tcp.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jts1_1.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/systemcontainer.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/cluster.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/threadpool.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/hsqldbkernlet.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jdbcpool.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/log.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jms2.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jmsswitch.jar
+    </classpath>
+   <classpath>
+      ${trifork.install.dir}/lib/connector.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/comptx.jar
+    </classpath>
+   <classpath>
+      ${trifork.install.dir}/lib/managementmodel.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jsr77kernlet.jar
+    </classpath>
+
+  </system>
+  
+  <kernel class="com.trifork.eas.server.EASKernel">
+    <kernlet class="com.trifork.eas.threadpool.ThreadPoolKernlet"/>
+
+<!--    <kernlet class="com.trifork.eas.management.ManagementKernlet"/> -->
+    <kernlet class="com.trifork.eas.management.kernlet.ManagementKernlet"/>
+
+    <kernlet class="com.trifork.eas.naming.COSINSBasedNamingModule">
+
+      <!-- Setting this value to true causes the naming kernlet to
+           publish the naming manager. -->
+      <property name="hostExternalNamingManager" value="true"/>
+
+    </kernlet>
+
+    <kernlet class="com.trifork.eas.hsqldb.HSQLDBKernlet"/>    
+
+    <kernlet class="com.trifork.eas.jts.JTSKernlet">
+      <property name="JTSName" value="com/trifork/JTS"/>
+    </kernlet>
+
+    <kernlet class="com.trifork.eas.jta.JTAKernlet">
+      <property name="JTSName" value="com/trifork/JTS"/>
+    </kernlet>
+
+    <kernlet class="com.trifork.eas.repository.RepositoryModule"/>
+
+    <kernlet class="com.trifork.eas.security.SecurityModule">
+             <property name="realmName" value="default"/>
+             <property name="realmClass"
+                    value="com.trifork.eas.security.FileBasedEASRealm"/>
+    </kernlet>
+
+    <kernlet class="com.trifork.eas.http.HTTPKernlet"/>
+
+    <kernlet class="com.trifork.eas.tcp.TCPKernlet"/>
+
+    <kernlet class="com.trifork.eas.systemcontainer.DefaultSystemManager"/>
+    
+    <kernlet class="com.trifork.eas.jdbcpool.JdbcPoolKernlet"/>
+
+    <kernlet class="com.trifork.eas.orb.DefaultOrbKernlet"/>
+      
+    <kernlet class="com.trifork.eas.log.Log4jKernlet"/>
+    <kernlet class="com.trifork.eas.jms.JMSKernlet"/>
+
+    <kernlet class="com.trifork.eas.connector.kernlet.ConnectorArchitectureKernlet"/>
+  </kernel>
+</kernel-config>

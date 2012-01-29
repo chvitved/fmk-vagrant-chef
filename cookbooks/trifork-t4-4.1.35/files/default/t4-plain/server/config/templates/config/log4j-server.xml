@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+        <!-- Setup appenders -->
+        <appender name="SERVER_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="server.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="10MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%d %-5p %m%n"/>
+           </layout>	    
+           <filter class="org.apache.log4j.varia.LevelRangeFilter">
+               <param name="levelMin" value="INFO"/>
+               <param name="levelMax" value="ERROR"/>
+           </filter>
+	</appender>
+ 
+        <appender name="DEBUG_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="server_debug.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="100MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%d [%t] %-5p %c %x - %m%n"/>
+           </layout>	    
+	</appender>
+ 
+        <appender name="XA_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="server_xa.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="100MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%d [%t] %m%n"/>
+           </layout>	    
+	</appender>
+ 
+        <appender name="USER_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="user.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="10MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%d [%t] %-5p %c %x - %m%n"/>
+           </layout>	    
+	</appender>
+ 
+        <appender name="ACCESS_LOG" class="org.apache.log4j.RollingFileAppender">
+           <param name="File" value="access.log"/>
+           <param name="Append" value="true"/>
+           <param name="ImmediateFlush" value="true"/>
+           <param name="MaxFileSize" value="10MB"/>
+           <param name="MaxBackupIndex" value="5"/>
+           <layout class="org.apache.log4j.PatternLayout">
+	             <param name="ConversionPattern"
+					value="%m%n"/>
+           </layout>	    
+	</appender>
+ 
+        <!-- Setup async appenders -->
+        <appender name="ASYNC_SERVER" class="org.apache.log4j.AsyncAppender">
+   	   <appender-ref ref="SERVER_LOG" />
+	</appender>
+
+        <appender name="ASYNC_NONE" class="org.apache.log4j.AsyncAppender">
+	</appender>
+
+        <appender name="ASYNC_DEBUG" class="org.apache.log4j.AsyncAppender">
+   	   <appender-ref ref="DEBUG_LOG" />
+	</appender>
+
+        <appender name="ASYNC_XA" class="org.apache.log4j.AsyncAppender">
+   	   <appender-ref ref="XA_LOG" />
+	</appender>
+
+        <appender name="ASYNC_USER" class="org.apache.log4j.AsyncAppender">
+   	   <appender-ref ref="USER_LOG" />
+	</appender>
+
+        <appender name="ASYNC_ACCESS" class="org.apache.log4j.AsyncAppender">
+   	   <appender-ref ref="ACCESS_LOG" />
+	</appender>
+
+        <!-- Setup server.log -->
+ 	<category name="com.trifork" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="ASYNC_SERVER" />
+        </category>  	
+ 	<category name="dk.eos" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="ASYNC_SERVER" />
+        </category>  	
+ 	<category name="com.trifork.eas.server.KernelSecurityManager" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="ASYNC_SERVER" />
+        </category>
+
+ 	<category name="org.jgroups" additivity="false">  	
+	   <priority value ="error" />
+   	   <appender-ref ref="ASYNC_SERVER" />
+        </category>  	
+
+        <!-- Setup server_xa.log -->
+        <!-- Uncomment this region to enable -->
+        <!--
+ 	<category name="com.trifork.eas.jdbcpool.XAResourceWrapper" additivity="false">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_XA" />
+        </category>  	
+        -->
+        <!-- SERVER DEBUGGING -->
+
+        <!-- Uncomment this block to debug server -->
+        <!--
+ 	<category name="com.trifork.eas" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>
+        -->
+
+        <!-- Uncomment this block to debug DirHandle and other utils -->
+        <!--
+ 	<category name="com.trifork.util" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>
+
+ 	<category name="com.trifork.kernlet" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>
+
+ 	<category name="com.trifork.eas.server.KernelSecurityManager" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>
+        -->
+
+        <!-- Uncomment this block to debug communication layers -->
+        <!--
+ 	<category name="com.trifork.rmi" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>  	
+
+ 	<category name="dk.eos.corba" additivity="true">  	
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_DEBUG" />
+        </category>
+        -->
+
+    <!-- Setup access.log -->
+ 	<category name="AccessLog" additivity="false">  	
+       <!-- Replace "warn" with "info" to enable access.log -->
+	   <priority value ="warn" />
+   	   <appender-ref ref="ASYNC_ACCESS" />
+    </category>  	
+
+        <!-- Setup user.log -->
+
+	<!-- edit category below if you want debug log for apache classes -->
+ 	<category name="org.apache" additivity="false">  	
+	   <priority value ="info" />
+   	   <appender-ref ref="ASYNC_USER" />
+        </category>
+
+	<root>
+	   <priority value ="debug" />
+   	   <appender-ref ref="ASYNC_USER" />
+	</root>
+	
+</log4j:configuration>

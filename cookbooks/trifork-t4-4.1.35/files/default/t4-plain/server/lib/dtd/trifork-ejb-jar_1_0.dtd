@@ -1,0 +1,39 @@
+<!--
+
+This is the Trifork EAS specific XML DTD for the EJB 1.1 & 2.0 deployment
+descriptors
+
+-->
+
+<!ELEMENT ejb-jar (enterprise-beans)>
+
+<!ELEMENT cmp ( create-table-deploy, delete-table-undeploy )>
+<!ELEMENT field-name (#PCDATA)>
+<!ELEMENT db-field-name (#PCDATA)>
+<!ELEMENT db-field-type (#PCDATA)>
+<!ELEMENT cmp-field (field-name, db-field-name?, db-field-type?)>
+<!ELEMENT cmpresource ( ds-jndi-name, default-resource-principal? )>
+<!ELEMENT ds-jndi-name (#PCDATA)>
+<!ELEMENT create-table-deploy (#PCDATA)>
+<!ELEMENT delete-table-undeploy (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!ELEMENT enterprise-beans (entity*, session*, cmpresource?)>
+<!ELEMENT entity (ejb-name, home-jndi-name, resource-ref*, cmp?, cmp-field*, 
+ejb-ref*)>
+<!ELEMENT session (ejb-name, home-jndi-name, resource-ref*, ejb-ref*)>
+<!ELEMENT ejb-name (#PCDATA)>
+<!ELEMENT home-jndi-name (#PCDATA)>
+<!ELEMENT resource-ref (res-ref-name, jndi-name)>
+<!ELEMENT res-ref-name (#PCDATA)>
+<!ELEMENT jndi-name (#PCDATA)>
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!ELEMENT security-role (role-name, principal-name, principal-class)>
+<!ELEMENT role-name (#PCDATA)>
+<!ELEMENT principal-name (#PCDATA)>
+<!ELEMENT principal-class (#PCDATA)>
+

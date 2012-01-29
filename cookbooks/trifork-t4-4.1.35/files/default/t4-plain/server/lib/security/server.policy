@@ -1,0 +1,48 @@
+
+// Standard extensions get all permissions by default
+
+grant codeBase "file:${java.home}/lib/rt.jar" {
+  permission java.security.AllPermission;
+};
+
+grant codeBase "file:${trifork.install.dir}/-" {
+  permission java.security.AllPermission;
+};
+
+// permissions for harness code
+grant codeBase "file:${CTS_HOME}/lib/-" {
+  permission java.security.AllPermission;
+};
+
+grant codeBase
+"file:${trifork.domain.dir}/servers/${trifork.server.name}/repositorycache/systems/management/-" {
+  permission java.security.AllPermission;
+};
+
+// permissions for generated stubs
+grant codeBase "file:stub" {
+  permission java.security.AllPermission;
+};
+
+// default permissions granted to all domains
+
+grant { 
+  permission java.lang.RuntimePermission "queuePrintJob";
+
+  // Additional properties needed RI...
+  // permission java.io.FilePermission "${java.io.tmpdir}${file.separator}-", "read,write,delete";
+  
+  // allows anyone to listen on un-privileged ports
+  permission java.net.SocketPermission "*:0-65535", "connect";
+  
+  // "standard" properies that can be read by anyone
+  permission java.util.PropertyPermission "*", "read";
+  
+  permission java.io.FilePermission "${trifork.install.dir}${/}lib${/}-", "read";
+
+  // A version of Merant driver needs this permission. 
+  // permission java.io.FilePermission "<<ALL FILES>>", "read";
+  // permission java.lang.RuntimePermission "modifyThreadGroup";
+  
+  // permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete";
+};

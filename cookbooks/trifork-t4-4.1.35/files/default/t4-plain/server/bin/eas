@@ -1,0 +1,246 @@
+#!/bin/sh
+
+if [ "$OSTYPE" = "cygwin" -o "$OS" = "Windows_NT" ]
+  then
+    classpathsep=";"
+    OSTYPE="cygwin"
+    if [ -n "$TRIFORK_INSTALL_DIR" ]; then 
+        TRIFORK_INSTALL_DIR=`cygpath -m "$TRIFORK_INSTALL_DIR"`
+    fi
+    if [ -n "$TRIFORK_DOMAIN_DIR" ]; then 
+        TRIFORK_DOMAIN_DIR=`cygpath -m "$TRIFORK_DOMAIN_DIR"`
+    fi
+    if [ -n "$TRIFORK_USER_CP" ]; then 
+        TRIFORK_USER_CP=`cygpath -m "$TRIFORK_USER_CP"`
+    fi
+    if [ -n "$TRIFORK_SECURITY_POLICY" ]; then 
+        TRIFORK_SECURITY_POLICY=`cygpath -m "$TRIFORK_SECURITY_POLICY"`
+    fi
+    if [ -n "$TRIFORK_SECURITY_AUTH_POLICY" ]; then 
+        TRIFORK_SECURITY_AUTH_POLICY=`cygpath -m "$TRIFORK_SECURITY_AUTH_POLICY"`
+    fi
+else
+    classpathsep=":"
+    OS=`uname`
+fi
+
+EAS=$0
+SAVEPATH="$PATH"
+PATH=/bin:/usr/bin
+
+if [ -z "$TRIFORK_INSTALL_DIR" ]; then
+
+  progname=`basename $0`
+
+  # Resolve if $0 is a symlink to the real eas script
+  while [ -h "$EAS" ]; do
+    ls=`ls -ld "$EAS"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+	EAS="$link"
+    else
+	EAS="`dirname $EAS`/$link"
+    fi
+  done
+
+  BINDIR=`dirname "$EAS"`
+
+  TRIFORK_INSTALL_DIR=`(cd $BINDIR/..; pwd)`
+fi
+
+EASLIB=$TRIFORK_INSTALL_DIR/lib
+
+if [ -z "$TRIFORK_CLASSPATH" ]; then
+    TRIFORK_CLASSPATH=$EASLIB/api.jar
+else
+    TRIFORK_CLASSPATH=$TRIFORK_CLASSPATH${classpathsep}$EASLIB/api.jar
+fi
+
+export TRIFORK_CLASSPATH
+
+# restore path
+PATH=$SAVEPATH
+
+SERVER="false"
+
+args=$*
+args2=$*
+
+
+for param in $args;
+do
+if [ "$param" = "server" ]
+then
+  for arg in $args;
+  do
+  if [ "$arg" = "start" ] 
+  then
+    if [ -z "$TRIFORK_DOMAIN_DIR" ]; then
+      TRIFORK_DOMAIN_DIR=$TRIFORK_INSTALL_DIR/domains/demodomain
+    fi
+
+    if [ \! -d $TRIFORK_DOMAIN_DIR ]; then
+      echo "no such domain instance: $TRIFORK_DOMAIN_DIR"
+      exit 1
+    fi
+    SERVER="true"
+  fi
+  done
+fi
+done
+
+if [ -z "$HOSTNAME" ]; then
+    HOSTNAME=`hostname`
+fi
+
+if [ -z "$JAVA_CMD" ]; then
+    JAVA_CMD=`which java`
+fi
+
+if [ -z "$JAVA_CMD" ]; then
+    echo "No java command in path."
+    exit 1
+fi
+
+if [ -z "$JAVA_HOME" ]; then
+    JAVA_HOME=$JAVA_CMD
+    while [ -h "$JAVA_HOME" ]; do
+	ls=`ls -ld "$JAVA_HOME"`
+	link=`expr "$ls" : '.*-> \(.*\)$'`
+	if expr "$link" : '/.*' > /dev/null; then
+            JAVA_HOME="$link"
+	else
+            JAVA_HOME="`dirname $JAVA_HOME`/$link"
+	fi
+    done
+    JAVA_HOME="`dirname $JAVA_HOME`"
+    JAVA_HOME="`dirname $JAVA_HOME`"
+    echo "Using JAVA_HOME=${JAVA_HOME}"
+fi
+
+
+EASLIB="$TRIFORK_INSTALL_DIR/lib"
+PREFIX=${PREFIX-exec}
+PROPS="-Dtrifork.install.dir=$TRIFORK_INSTALL_DIR"
+PROPS="$PROPS -Dtrifork.domain.dir=$TRIFORK_DOMAIN_DIR"
+PROPS="$PROPS -Djava.ext.dirs=$EASLIB/ext${classpathsep}$TRIFORK_DOMAIN_DIR/lib/share/ext${classpathsep}${JAVA_HOME}/lib/ext${classpathsep}${JAVA_HOME}/jre/lib/ext"
+PROPS="$PROPS -Djava.endorsed.dirs=$EASLIB/endorsed${classpathsep}$TRIFORK_DOMAIN_DIR/lib/share/endorsed"
+PROPS="$PROPS -Dtrifork.user.classpath=$TRIFORK_USER_CP"
+PROPS="$PROPS -Dtrifork.node.name=$HOSTNAME"
+PROPS="$PROPS -Denv.java.home=$JAVA_HOME"
+
+#echo -ne "\033]0;trifork $1 $2 [$TRIFORK_DOMAIN_NAME/$TRIFORK_SERVER_NAME]@$HOSTNAME\007"
+
+if [ -z "$TRIFORK_SECURITY_POLICY" ]
+then
+  PROPS="$PROPS -Djava.security.policy=$EASLIB/security/server.policy"
+else
+  PROPS="$PROPS -Djava.security.policy=$TRIFORK_SECURITY_POLICY"
+fi
+
+if [ -z "$TRIFORK_SECURITY_AUTH_POLICY" ]
+then
+  PROPS="$PROPS -Djava.security.auth.policy=$EASLIB/security/server.auth.policy"
+else
+  PROPS="$PROPS -Djava.security.auth.policy=$TRIFORK_SECURITY_AUTH_POLICY"
+fi
+
+## when running as part of the J2EE Compability Test Suite
+if [ -n "$CTS_HOME" ]; then
+    PROPS="$PROPS -DCTS_HOME=$CTS_HOME"
+fi
+
+BOOTCLASSPATH_P="-Xbootclasspath/p:$EASLIB/boot.jar${classpathsep}$EASLIB/jdkopt.jar"
+PROPS="$PROPS"
+
+if [ "$OS" = "Darwin" ]
+  then
+    ## Apple specific properties, needs to be on the command line 
+    ## to take effect.
+    PROPS="$PROPS -Dapple.laf.useScreenMenuBar=true"
+    PROPS="$PROPS -Dcom.apple.mrj.application.apple.menu.about.name=Trifork"
+fi
+
+DEBUGPROPS=
+PROFILEPROPS=
+VMPROPS="false"
+FLAG="false"
+SERVERFLAG="false"
+DOMAINFLAF="false"
+
+for param in $args2;
+do
+  if [ "$FLAG" = "true" ]
+  then
+      JVMARGS=$JVMARGS' '$param
+      VMPROPS="true"
+      FLAG="false"
+  elif [ "$SERVERFLAG" = "true" ]
+  then
+      TRIFORK_SERVER_NAME=$param
+      SERVERFLAG="false"
+  elif [ "$DOMAINFLAG" = "true" ]
+  then
+      TRIFORK_DOMAIN_NAME=$param
+      DOMAINFLAG="false"
+  else
+  case $param in
+    -vmargs)
+      VMPROPS="true"
+      FLAG="true"
+      ;;
+
+    -vmargs=*)
+      JVMARGS=$JVMARGS' '`expr "$param" : '-vmargs=\(.*\)$'`
+      VMPROPS="true"
+      ;;
+
+    -server)
+      SERVERFLAG="true"
+      ;;
+
+    -domain)
+      DOMAINFLAG="true"
+      ;;
+
+    -profile)
+	  PROPS="$PROPS -Dtrifork.p4.agent_name=$TRIFORK_DOMAIN_NAME:Server=$TRIFORK_SERVER_NAME"
+	  PREFIX="$P4_INSTALL_DIR/bin/profile"
+      ;;
+
+    -debug)
+
+      DEBUGPROPS='-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000'
+      ;;
+
+    -debug=*)
+      DEBUG_PORT=`expr "$param" : '-debug=\(.*\)$'`
+      DEBUGPROPS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$DEBUG_PORT"
+      ;;
+
+    -echo)
+      PREFIX="echo"
+      ;;
+    *)
+    ;;
+  esac;
+  fi
+
+done
+
+PROPS="$PROPS -Dtrifork.domain.name=$TRIFORK_DOMAIN_NAME"
+PROPS="$PROPS -Dtrifork.server.name=$TRIFORK_SERVER_NAME"
+
+#if [ "$VMPROPS" = "true" ]; then
+  #echo Using VM properties: $JVMARGS
+#fi
+
+if [ "$SERVER" = "true" ]; then
+  cd $TRIFORK_DOMAIN_DIR/logs/$TRIFORK_SERVER_NAME
+  PROPS="$PROPS -Djava.awt.headless=true"
+fi
+
+
+#echo $PREFIX java  $DEBUGPROPS $PROFILEPROPS $JVMARGS $BOOTCLASSPATH_P $PROPS -cp "$TRIFORK_CLASSPATH${classpathsep}$EASLIB/launcher.jar" com.trifork.eas.launcher.Launcher -jar "$EASLIB/kernel.jar" "$@"
+$PREFIX java  $DEBUGPROPS $PROFILEPROPS $JVMARGS $BOOTCLASSPATH_P $PROPS -cp "$TRIFORK_CLASSPATH${classpathsep}$EASLIB/launcher.jar" com.trifork.eas.launcher.Launcher -jar "$EASLIB/kernel.jar" "$@"
+

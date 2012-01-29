@@ -1,0 +1,22 @@
+<!--
+
+This is the Trifork EAS specific XML DTD for the EJB 1.1 & 2.0 deployment
+descriptors
+
+-->
+
+<!ELEMENT web-app (resource-ref*, ejb-ref*, context-root*)>
+<!ELEMENT resource-ref (res-ref-name, jndi-name)>
+<!ELEMENT res-ref-name (#PCDATA)>
+<!ELEMENT jndi-name (#PCDATA)>
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref-name (#PCDATA)>
+<!ELEMENT context-root (#PCDATA)>
+
+<!ATTLIST web-app id ID #IMPLIED>
+<!ATTLIST resource-ref id ID #IMPLIED>
+<!ATTLIST res-ref-name id ID #IMPLIED>
+<!ATTLIST jndi-name id ID #IMPLIED>
+<!ATTLIST ejb-ref id ID #IMPLIED>
+<!ATTLIST ejb-ref-name id ID #IMPLIED>
+<!ATTLIST context-root id ID #IMPLIED>

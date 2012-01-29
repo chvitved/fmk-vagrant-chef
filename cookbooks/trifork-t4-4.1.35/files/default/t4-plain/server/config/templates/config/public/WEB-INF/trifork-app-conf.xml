@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE trifork-app-conf PUBLIC '-//Trifork, AS.//DTD Application Configuration//EN' 'http://www.trifork.com/j2ee/dtds/trifork-app-conf_2_0.dtd'>
+
+<trifork-app-conf>
+  <web-app>
+    <!-- define the context root for public material -->
+    <context-root>public</context-root>
+  </web-app>
+
+</trifork-app-conf>
+
+

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2001 Trifork Technologies.
+-->
+<!--
+This is the XML DTD for the Trifork deployment interface descriptor.
+A valid descriptor must have a DOCTYPE declaration of the form:
+
+<!DOCTYPE trifork-deployment-interface PUBLIC 
+     "-//Trifork Technologies//DTD Trifork Deployment interface 1.0//EN" 
+     "http://trifork.com/j2ee/dtds/trifork-deployment-interface_1_0.dtd">
+-->
+
+<!--
+Root element of the deployment interface. The deployment interface can be
+either an abstracts description of: 
+     1) The environment provided by a particular system container, or
+     2) The environment needed by a an archive
+     
+  If an DI is extracted from a system container, it can be thought of the "what" it
+  provides - as opposed to the configuration that both has the "what" and the "how".
+  
+ If a DI is extracted from an archive, it contains all the external dependencies that
+ the archive will need provided in order to be deployed correctly.
+-->
+<!ELEMENT trifork-deployment-interface (name?, resource*, ejb*, endpoint*,
+property*, principal*)>
+
+<!-- The name of the deployment interface -->
+<!ELEMENT name (#PCDATA)>
+
+<!ELEMENT resource (description?, type, jndi-name)>
+<!ELEMENT system (description?, system-name, ejb*, resource*)>
+<!-- Defines a logical endpoint -->
+<!ELEMENT endpoint (description?, endpoint-name, transport-guarantee?)>
+<!-- A description of the an entry in the deployment interface -->
+<!ELEMENT description (#PCDATA)>
+<!-- Specifies the type of resource provided. Legal values are:
+      javax.sql.DataSource
+      javax.jms.QueueConnectionFactory
+      javax.jms.TopicConnectionFactory
+      javax.jms.Queue
+      javax.jms.Topic
+      javax.mail.Session
+      java.net.URL
+      a valid type of a JCA factory
+-->
+<!ELEMENT type (#PCDATA)>
+<!-- Contains the JNDI name for a particular entry -->
+<!ELEMENT jndi-name (#PCDATA)>
+<!ELEMENT system-name (#PCDATA)>
+<!-- Describes the JNDI binding of a particular type of EJB -->
+<!ELEMENT ejb (jndi-name?, home?, remote?, local-jndi-name?, local-home?, local?)>
+<!-- The name of an endpoint -->
+<!ELEMENT endpoint-name (#PCDATA)>
+<!-- The transport guarantee for an end-point. Legal values are: NONE, -->
+<!-- INTEGRAL, CONFIDENTIAL -->
+<!ELEMENT transport-guarantee (#PCDATA)>
+<!-- The classname of the home interface of an EJB -->
+<!ELEMENT home (#PCDATA)>
+<!-- The classname of the remote interface of an EJB -->
+<!ELEMENT remote (#PCDATA)>
+<!-- Defines a dependency of a particular env-entry to be defined on the server,
+     or declares that a particular entry is provided by the server. 
+ -->
+ <!ELEMENT env-entry (description?, env-entry-name, env-entry-type)>
+<!-- The valid types for a env-entry-type are the same as specified in the EJB spec. They
+      are: java.lang.Boolean, java.lang.String, java.lang.Character, java.lang.Integer,
+     java.lang.Double, java.lang.Byte, java.lang.Short, java.lang.Long, and java.lang.Float.
+-->
+<!ELEMENT env-entry-type (#PCDATA)>
+<!-- The name of the env-entry. This env-entry name is bound into the 
+      java:comp/env JNDI context
+--> 
+<!ELEMENT env-entry-name (#PCDATA)>
+<!-- A principal is a reference to a user or group in the user-store -->
+<!ELEMENT principal (principal-name)>
+<!ELEMENT principal-name (#PCDATA)>

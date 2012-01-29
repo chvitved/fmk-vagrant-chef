@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+
+	<description>Tag library for aggregating Trifork T4 portlets.</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>portallib</short-name>
+    <uri>http://trifork.com/portlet/portallib</uri>
+	<validator>
+        <validator-class>com.trifork.eas.portlet.portallib.tags.Validator</validator-class>
+    </validator>
+
+    <tag>
+        <description>
+			Include a portlet into the current jsp page
+		</description>        
+        <name>include</name>
+        <tag-class>com.trifork.eas.portlet.portallib.tags.IncludeTag</tag-class>
+		<body-content>empty</body-content>
+        <attribute>
+	        <description>
+				The context-path of the portlet web application.
+			</description>        
+            <name>portletContextRoot</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+	        <description>
+	            The portlet-name of the included portlet.
+	        </description>
+            <name>portletName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+	        <description>
+	            The window id of the portlet.
+	        </description>
+            <name>windowId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>
+			Insert a portlet url into the current jsp page
+		</description>        
+        <name>url</name>
+        <tag-class>com.trifork.eas.portlet.portallib.tags.URLTag</tag-class>
+		<body-content>empty</body-content>
+        <attribute>
+	        <description>
+				The context-path of the portlet web application.
+			</description>        
+            <name>portletContextRoot</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+	        <description>
+	            The portlet-name of the included portlet.
+	        </description>
+            <name>portletName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>windowState</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>portletMode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+	        <description>
+	            The window id of the portlet.
+	        </description>
+            <name>windowId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

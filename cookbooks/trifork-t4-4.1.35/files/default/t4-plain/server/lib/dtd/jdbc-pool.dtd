@@ -1,0 +1,75 @@
+<!--
+Copyright (c) 2001 Trifork Technologies.
+-->
+
+<!--
+This is the XML DTD for the Trifork JDBC pool descriptor.
+A valid descriptor must have a DOCTYPE declaration of the form:
+
+<!DOCTYPE jdbc-pool PUBLIC 
+     "-//Trifork Technologies//DTD Trifork JDBC pool Descriptor1.0//EN" 
+     "http://trifork.com/j2ee/dtds/jdbc-pool_1_0.dtd">
+-->
+
+
+<!--
+This is to root element of the Trifork JDBC pool descriptor
+-->
+<!ELEMENT jdbc-pool (data-source*, pool-entry*)>
+
+<!--
+The data-source element specifies a data source in the JDBC pool. This includes
+a loader definition, a set of properties which are set through introspection on
+the data source, and a number of pool-entry elements that define how the data
+source should be made available to user code.
+
+The jndi-name attribute specifies the JNDI name of the data source. Note that
+using this JNDI name in user code will bypass the JDBC pool. Use the JNDI name
+defined in a pool-entry element instead (unless a bypass is intended).
+
+Used in: jdbc-pool
+-->
+<!ELEMENT data-source (loader, property*, pool-entry*)>
+<!ATTLIST data-source
+    jndi-name  CDATA  #REQUIRED
+>
+
+<!--
+Define a property (name/value pair).
+
+Used in: property, loader
+-->
+<!ELEMENT property EMPTY>
+<!ATTLIST property 
+    name   CDATA   #REQUIRED
+    value  CDATA   #REQUIRED
+>
+
+<!--
+Define a data source loader. The data source to load must be specified in a
+nested property element with the name "class" and a value corresponding to the
+class of the data source.
+
+The class attribute of the loader element specifies the data source loader
+class. Currently only the value referred to by the default value is available.
+
+Used in: data-source
+-->
+<!ELEMENT loader (property*)>
+<!ATTLIST loader
+    class  CDATA   "com.trifork.eas.jdbcpool.GenericDataSourceLoader"
+>
+
+<!--
+The pool-entry element defines a JNDI name under which the pooled data source
+should be visible to user code. The jndi-name attribute specifies the JNDI
+name. 
+
+Used in: data-source
+-->
+<!ELEMENT pool-entry EMPTY>
+<!ATTLIST pool-entry 
+    jndi-name             CDATA  #REQUIRED
+    data-source-jndi-name CDATA  #IMPLIED 
+    max-connections       CDATA  #IMPLIED 
+>

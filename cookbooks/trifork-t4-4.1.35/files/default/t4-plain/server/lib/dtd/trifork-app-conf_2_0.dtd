@@ -1,0 +1,998 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2001 Trifork Technologies.
+-->
+<!--
+This is the XML DTD for the Trifork application configuration descriptor.
+A valid descriptor must have a DOCTYPE declaration of the form:
+
+<!DOCTYPE trifork-app-conf PUBLIC 
+     "-//Trifork Technologies//DTD Trifork Application Descriptor2.0//EN" 
+     "http://trifork.com/j2ee/dtds/trifork-app-conf_2_0.dtd">
+-->
+
+<!--
+This is the root element of the Trifork application configuration descriptor.
+
+-->
+<!ELEMENT trifork-app-conf (app-name? , role-mapping* , web-app* ,
+enterprise-beans*, relationships*, application-client*, connector*, ejb-jar*)>
+
+<!-- 
+The application-client element adds information to an application-client
+element in the portable descriptor (application.xml). Matching is done on 
+based on the uri element
+
+Used in: trifork-app-conf
+-->
+<!ELEMENT application-client (uri? , env-entry* , ejb-ref* , resource-ref* , resource-env-ref*, service-ref*)>
+
+<!--
+The callrouter-classname element specifies a class name for usage as load balancing algorithm for the ejb
+ 
+Used in: clustered
+-->
+<!ELEMENT callrouter-classname (#PCDATA)>
+ 
+<!--
+The clustered element specifies clusting properties for the bean.
+ 
+Used in: ejb
+-->
+<!ELEMENT clustered (callrouter-classname?)>
+
+<!-- 
+This element describes runtime information for a CMP EntityBean object for
+EJB1.1 and EJB2.0 beans.
+
+Used in: ejb
+-->
+<!ELEMENT cmp (table-name? , cmp-field* , sql-statement* , create-table-deploy? , delete-table-undeploy? , is-modified-method? , cmp-finder-prefetch?, cmp-select-for-update?, cmp-transaction-local-cache?, cmp-validate-fields?, cmp-cache? )>
+
+<!--
+This element is used to enable/disable an optimization where
+ejb state is eagerly read as part of running finders.
+
+Vaild values: Enable (default) or Disable
+-->
+<!ELEMENT cmp-finder-prefetch (#PCDATA)>
+
+<!--
+This element is used to enable/disable a transaction-local
+cache of all loaded CMP state for this bean.  This can be diabled
+if read_committed semantics is preferred.
+
+Vaild values: Enable (default) or Disable
+-->
+<!ELEMENT cmp-transaction-local-cache (#PCDATA)>
+
+<!--
+This element is used to enable/disable using SELECT ... FOR UPDATE to
+implement ejbLoad semantics.  
+
+Vaild values: Enable or Disable (default)
+-->
+<!ELEMENT cmp-select-for-update (#PCDATA)>
+
+<!ELEMENT cmp-cache (cmp-cache-timeout, cmp-cache-size) >
+
+<!--
+This field is used to enable DBMS-verified reads, which will
+issue a SELECT ... FOR UPDATE to verify the existence of a 
+record that has been read but not updated or deleted.
+
+If this field has the value of "None", then no validation takes place.
+A value of "All" causes this to apply to all CMP's which have been 
+loaded, but not changed; and "Cached" implies that read-validation
+only is used when the valus is obtained from a global cache.
+
+Vaild values: All, Cached, None (default)
+-->
+<!ELEMENT cmp-validate-reads (#PCDATA)>
+
+<!-- 
+The cmp-cache-timeout describes the number of MINUTES a cmp cache
+entry is valid.
+ -->
+<!ELEMENT cmp-cache-timeout (#PCDATA)>
+
+<!-- 
+The cmp-cache-size describes the number of entries the cmp cache
+contains.  If the cache size grows beyond this, entries are evicted
+according to a Least Recently Used strategy.
+-->
+<!ELEMENT cmp-cache-size (#PCDATA)>
+
+<!-- 
+The cmp-validate-fields element identifies fields that must be
+validated for a CMP EntityBean as a concequence of EJBStore.  
+If this tag is specified, fields are validated when issuing
+an SQL UPDATE, by adding a WHERE clause that checks values as
+known in ejbLoad.  Optionaly, DBMS-verfied reads are performned
+if cmp-validate-reads is specified to either All or Cached. 
+-->
+<!ELEMENT cmp-validate-fields (cmp-validate-reads?, cmp-optimistic-lock?, field-name*)>
+
+<!ELEMENT cmp-optimistic-lock (field-type, db-field-name?, db-field-type?)>
+
+<!-- 
+Used to specify the java-level type used to represent the 
+optimistic lock.  If this is omitted, the field-class defaults 
+to java.lang.Long.  Valid values are java.lang.Integer, java.lang.Long
+and java.math.BigDecimal.
+-->
+<!ELEMENT field-type (#PCDATA)>
+
+
+<!--
+The cmp-field element makes it possible to override the default choices of
+database column name and type for a cmp-field defined in the corresponding
+ejb-jar.xml descriptor
+
+Used in: cmp
+-->
+<!ELEMENT cmp-field (field-name , db-field-name? , db-field-type?)>
+
+<!--
+The cmp-resource element describes a named resource to be used by CMP. 
+
+Used in: enterprise-beans
+-->
+<!ELEMENT cmp-resource (jndi-name , resource-principal?)>
+
+<!--
+The context-root element defines the context root for a web application. Note
+that if a web application is embedded in an enterprise archive, the context
+root may be specified in a portable way in the application.xml descriptor.
+
+Used in: web-app
+-->
+<!ELEMENT context-root (#PCDATA)>
+
+<!-- 
+This element indicates whether to create the cmp table during deployment or
+not. 
+
+The create-table-deploy element must be one of the two following:
+
+	<create-table-deploy>True</create-table-deploy>
+	<create-table-deploy>False</create-table-deploy>
+
+Used in: cmp
+-->
+<!ELEMENT create-table-deploy (#PCDATA)>
+
+<!--
+Specify the database column name for a cmp field.
+
+Used in: cmp-field
+-->
+<!ELEMENT db-field-name (#PCDATA)>
+
+<!--
+Specify the database column type (the SQL type) for a cmp field.
+
+Used in: cmp-field
+-->
+<!ELEMENT db-field-type (#PCDATA)>
+
+<!-- 
+Identifies the default value for the HTTP header 'Host:' to use for
+constructing external URLs, e.g. for redirects.
+
+Used in: web-app
+-->
+<!ELEMENT default-host (#PCDATA)>
+
+<!-- 
+This element indicates whether to delete the cmp table during undeployment of
+the entity bean.
+
+The delete-table-undeploy element must be one of the two following:
+
+	<delete-table-undeploy>True</delete-table-undeploy>
+	<delete-table-undeploy>False</delete-table-undeploy>
+
+Used in: cmp
+-->
+<!ELEMENT delete-table-undeploy (#PCDATA)>
+
+<!--
+The ejb element adds information to an ejb element in the portable descriptor
+(ejb-jar.xml). Matching is done on the values of the ejb-name elements.
+
+Used in: enterprise-beans
+-->
+<!ELEMENT ejb (ejb-name , jndi-name? , cmp? , 
+mdb-durable-subscription-name? , mdb-connection-factory? ,
+ior-security-config? , max-pool-size? , default-pool-size? ,
+pool-timeout?, idle-timeout?, max-concurrent-instances?, env-entry* , ejb-ref* , resource-ref* , resource-env-ref* , 
+service-ref*, webservice-endpoint?, activation-config?, clustered?)> 
+
+<!--
+Specify which resource adapter (connector) to use for in-bound messaging
+to this bean, and specify configuration properties for this association.
+
+Used in: ejb
+-->
+<!ELEMENT activation-config (resource-adapter-name, resource-principal?, 
+activation-config-property*)>
+
+<!--
+Identify the resource adapter; should match the "display-name" of a connector
+deployed to the system.
+
+Used in: activation-config
+-->
+<!ELEMENT resource-adapter-name (#PCDATA)>
+
+<!--
+Define values for properties defined in the connector's inbound definition.
+-->
+<!ELEMENT activation-config-property (activation-config-property-name, 
+activation-config-property-value)>
+
+<!ELEMENT activation-config-property-name (#PCDATA)>
+<!ELEMENT activation-config-property-value (#PCDATA)>
+
+<!--
+Specifies the name of an enterprise bean.
+
+Used in: ejb, method
+-->
+<!ELEMENT ejb-name (#PCDATA)>
+
+<!-- 
+The ejb-ref element binds an ejb reference to a jndi name. 
+
+Used in: application-client, ejb, web-app.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
+
+<!-- 
+The ejb-ref-name element links an ejb-ref element to a ejb-ref element in the
+corresponding portable descriptor (application-client.xml, ejb-jar.xml or
+web.xml).
+
+Used in: ejb-ref
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!-- 
+The endpoint element identifies an HTTP, HTTPS or AJPv13 endpoint by name. 
+-->
+<!ELEMENT endpoint (#PCDATA)>
+
+<!--
+The enterprise-beans element groups ejb and cmp-resource elements.
+
+Used in: trifork-app-conf
+-->
+<!ELEMENT enterprise-beans (ejb* , cmp-resource?, message-destination*, 
+webservice-description*)>
+
+<!-- 
+The env-entry element contains the declaration of an enterprise bean's
+environment entry. The declaration consists of an optional description, the
+name of the environment entry, and an optional value.
+
+Used in: application-client, ejb, web-app
+-->
+<!ELEMENT env-entry (env-entry-name , env-entry-type , env-entry-value?)>
+
+<!-- 
+The env-entry-name element contains the name of an enterprise bean's
+environment entry.
+
+Used in: env-entry
+-->
+<!ELEMENT env-entry-name (#PCDATA)>
+
+<!-- 
+The env-entry-type element contains the fully-qualified Java type of the
+environment entry value that is expected by the enterprise bean's code. 
+
+Used in: env-entry
+ -->
+<!ELEMENT env-entry-type (#PCDATA)>
+
+<!-- 
+The env-entry-value element contains the value of an enterprise bean's
+environment entry. The value must be a String that is valid for the constructor
+of the specified type that takes a single String parameter.
+
+Used in: env-entry
+-->
+<!ELEMENT env-entry-value (#PCDATA)>
+
+<!--
+Specifies the database column name for for a CMP field.
+
+Used in: cmp-field
+-->
+<!ELEMENT field-name (#PCDATA)>
+
+<!--
+Optional. This element indicates the port number to use for 
+IIOP transport.  This value is only meaningful if none of
+integrity, confidentiality and establish-trust
+members are set to REQUIRED.  Default value is 0 meaning that the
+port is dynamically allocated.
+-->  
+<!ELEMENT iiop-port ( #PCDATA)>
+
+
+<!-- 
+Specifies the name of a no-arg method on the CMP bean class with return type
+boolean. This method should return true only if the persistent fields of the
+CMP bean instance has been modified, and thus need to be stored.
+
+Used in: cmp
+-->
+<!ELEMENT is-modified-method (#PCDATA)>
+
+<!-- 
+The jndi-name element specifies a jndi name. 
+
+Used in: cmp-resource, ejb, ejb-ref, mdb-connection-factory,
+resource-env-ref, resource-ref, jndi-names
+-->
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!--
+This node holds the address of the sender.
+
+Used in: mail-resource-conf
+-->
+<!ELEMENT mail-from (#PCDATA)>
+
+<!--
+This node holds the mail to information of a JavaMail session object.
+
+Used in: mail-resource-conf
+-->
+<!ELEMENT mail-host (#PCDATA)>
+
+<!--
+This is the root element describing the runtime bindings of a mail resource
+reference.
+
+vUsed in: resource-ref
+-->
+<!ELEMENT mail-resource-conf (name , mail-from , mail-host)>
+
+<!-- 
+This element describes the connection factory to use for a particular message
+driven bean. Used in EJB.
+
+Used in: ejb
+-->
+<!ELEMENT mdb-connection-factory (jndi-name , resource-principal?)>
+
+<!-- 
+This element describes the name of the durable subscription for an MDB. Used in EJB.
+
+Used in: ejb
+-->
+<!ELEMENT mdb-durable-subscription-name (#PCDATA)>
+
+<!--
+Specifes a method. See the description of the method element in ejb-jar_2_0.dtd
+for details.
+
+Used in: sql-statement
+-->
+<!ELEMENT method (method-intf?, method-name, (method-params|method-signature))>
+
+<!--
+Specifes how to locate a method. See the description of the method-intf element
+in ejb-jar_2_0.dtd for details.
+
+Used in: method
+-->
+<!ELEMENT method-intf (#PCDATA)>
+
+<!--
+Specifes a method name. See the description of the method-name element in
+ejb-jar_2_0.dtd for details.
+
+Used in: method
+-->
+<!ELEMENT method-name (#PCDATA)>
+
+<!--
+Specifes a method parameter. See the description of the method-param element in
+ejb-jar_2_0.dtd for details.
+
+Used in: method-params
+-->
+<!ELEMENT method-param (#PCDATA)>
+
+<!--
+Specifes a list of method parameters. See the description of the method-params
+element in ejb-jar_2_0.dtd for details.
+
+Used in: method
+-->
+<!ELEMENT method-params (method-param*)>
+
+<!--
+Specifes a comma separated list of named method parameters. Example:
+    <method-signature>int x, String y</method-signature>
+
+Used in: method
+-->
+<!ELEMENT method-signature (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+
+Used in: stub-property
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+Specify a password string
+
+Used in: resource-principal
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!-- 
+Specifies whether web sessions should be saved and restored to/from
+persistent storage when system container or server is stopped and
+started. This feature is disabled by default. 
+
+Legal values for the persistent-sessions element are: 
+
+    <persistent-sessions>True<persistent-sessions>
+    <persistent-sessions>False<persistent-sessions>
+
+Used in: web-app
+  -->
+<!ELEMENT persistent-sessions (#PCDATA)>
+
+<!-- 
+This node describes a username on the platform. 
+
+Used in: principals, resource-principal
+-->
+<!ELEMENT principal (#PCDATA)>
+
+<!-- 
+This node holds a list of usernames. 
+
+Used in: role
+-->
+<!ELEMENT principals (principal*)>
+
+<!--
+Input to the SQL mapping of a particular CMR relation. 
+
+Used in relationships. 
+-->
+<!ELEMENT ejb-relation (ejb-relation-name, table-name?,
+ejb-relationship-role*)>
+
+<!--
+The name of an ejb relation. Must match a ejb-relation-name in the
+corresponding ejb-jar.xml. 
+
+Used in ejb-relation.
+-->
+<!ELEMENT ejb-relation-name (#PCDATA)>
+
+<!--
+Input to the SQL mapping of a single role (=side) of a CMR relation. 
+
+Used in ejb-relation. 
+-->
+<!ELEMENT ejb-relationship-role (relationship-role-source, destination-key*)>
+
+<!--
+Identifies a role (=side) of a CMR relation
+-->
+<!ELEMENT relationship-role-source (ejb-name)>
+
+<!--
+Identifies a primary key that corresponds to the 
+
+Used in ejb-relationship-role
+-->
+<!ELEMENT destination-key (cmp-field*)>
+
+<!--
+Input to the SQL mapping of CMR (Container Managed Relationships) 
+
+Used in: trifork-app-conf
+-->
+<!ELEMENT relationships (ejb-relation*)>
+
+<!-- 
+The name of a resource reference. 
+
+Used in: resource-ref
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+Attach a jndi-name to a resource-env-ref defined in the portable descriptor
+(application-client.xml, ejb-jar.xml or web.xml).
+
+Used in: application-client, ejb, web-app
+-->
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
+
+<!--
+The name of a resource-env-ref. The resource-env-ref-name element must match
+the resource-env-ref-name of a resource-env-ref in the portable descriptor
+(application-client.xml, ejb-jar.xml or web.xml).
+
+Used in: resource-env-ref
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+Groups a name and a password
+
+Used in: cmp-resource, mdb-connection-factory, resource-ref
+-->
+<!ELEMENT resource-principal (principal , password)>
+
+<!-- 
+This node holds all the runtime bindings of a resource reference. 
+
+Used in: application-client, ejb, web-app
+-->
+<!ELEMENT resource-ref (res-ref-name , jndi-name , resource-principal? , mail-resource-conf?)>
+
+<!-- 
+The name of a service reference. 
+
+Used in: service-ref
+-->
+<!ELEMENT service-ref-name (#PCDATA)>
+
+<!-- 
+The name/URL of a wsdl file to used instead of the one specified in the 
+service-ref in the standard deployment descriptor 
+
+Used in: service-ref
+-->
+<!ELEMENT wsdl-override (#PCDATA)>
+
+<!-- 
+This node holds all the runtime bindings of a web service reference. 
+
+Used in: application-client, ejb, web-app
+-->
+<!ELEMENT service-ref (service-ref-name , port-info* , wsdl-override?)>
+
+<!-- 
+The name of a webservice description 
+
+Used in: webservice-description
+-->
+<!ELEMENT webservice-description-name (#PCDATA)>
+
+<!-- 
+Specifies where the WSDL file for the web service should be published
+
+Used in: webservice-description
+-->
+<!ELEMENT wsdl-publish-location (#PCDATA)>
+
+
+<!-- 
+This node holds the runtime bindings of a web service. 
+
+Used in: web-app
+-->
+<!ELEMENT webservice-description (webservice-description-name, wsdl-publish-location?)>
+
+
+<!-- 
+Describe binding for a message destination
+
+Used in: web-app, enterprise-beans
+-->
+<!ELEMENT message-destination (message-destination-name,  jndi-name)>
+<!ELEMENT message-destination-name (#PCDATA)>
+
+
+<!--
+Specify additional information about a web service port
+
+Used in: service-ref
+-->
+<!ELEMENT port-info (service-endpoint-interface?, wsdl-port?, stub-property*)>
+
+<!-- 
+The name of the service endpoint interface for this port
+
+Used in: port-info
+-->
+<!ELEMENT service-endpoint-interface (#PCDATA)>
+
+<!--
+The name of the port in the WSDL file
+
+Used in: port-info
+-->
+<!ELEMENT wsdl-port (namespaceURI , localpart)>
+
+<!-- 
+The namespaceURI part of a QName
+
+Used in: wsdl-port
+-->
+<!ELEMENT namespaceURI (#PCDATA)>
+
+<!-- 
+The localpart of a QName
+
+Used in: wsdl-port
+-->
+<!ELEMENT localpart (#PCDATA)>
+
+
+<!--
+The webservice-endpoint adds web service information to a specific
+session bean. The session bean must be linked to from a webservices.xml
+deployment descriptor in order for this data to have effect.
+
+Used in: ejb
+-->
+<!ELEMENT webservice-endpoint (port-component-name , endpoint-address-uri, login-config?, transport-guarantee?)> 
+
+<!-- 
+The name of the port component this web service enabled session bean is
+associated with
+
+Used in: webservice-endpoint
+-->
+<!ELEMENT port-component-name (#PCDATA)>
+
+<!-- 
+An URI specifying where the web service enabled session bean should be available.
+The format should be: contextroot/mapping
+
+Used in: webservice-endpoint
+-->
+<!ELEMENT endpoint-address-uri (#PCDATA)>
+
+<!-- 
+Specify how authentication is performed for the EJB webservice invocation
+
+Used in: webservice-endpoint
+-->
+<!ELEMENT login-config (auth-method, realm?)>
+
+<!-- 
+Set the transport guaratee for this web service endpoint - refere to the
+transport-guarantee tag for servlets for more information.
+Allowable values are: NONE, INTEGRAL and CONFIDENTIAL
+If not specified, the behavior is equivalent to NONE
+
+Used in: webservice-endpoint
+-->
+<!ELEMENT transport-guarantee (#PCDATA)>
+
+
+<!--
+A property to be set on a web service stub
+
+Used in: port-info
+-->
+<!ELEMENT stub-property (name , value)>
+
+<!-- 
+This text nodes holds a value string.
+
+Used in: stub-property
+-->
+<!ELEMENT value (#PCDATA)>
+
+<!-- 
+This node holds the mapping of a role to a list of users and user-groups.
+
+Used in: 
+-->
+<!ELEMENT role (principals)>
+
+<!-- 
+The name attribute of a role is the rolename of that role. 
+
+Used in: role-mapping
+-->
+<!ATTLIST role name NMTOKEN  #REQUIRED>
+
+<!-- 
+This node holds the mapping of roles to usernames and user groups. 
+
+Used in: trifork-app-conf
+-->
+<!ELEMENT role-mapping (role*)>
+
+<!-- 
+The text of this node is an SQL statement for a CMP finder method.
+
+Used in: sql-statement
+-->
+<!ELEMENT sql (#PCDATA)>
+
+<!-- 
+This node associates an sql statement with a method. The method may be a
+finder/ejbSelect method (so the method element would be the same as in the
+EJB2.0 DTD). 
+
+Used in: cmp
+-->
+<!ELEMENT sql-statement (method, sql)>
+
+<!--
+Specify application name
+
+Used in: trifork-app-conf
+-->
+<!ELEMENT app-name (#PCDATA)>
+
+<!--
+Specify the database table name representing the state of a CMP entity bean.
+
+Used in: cmp
+-->
+<!ELEMENT table-name (#PCDATA)>
+
+<!--
+uri
+-->
+<!ELEMENT uri ( #PCDATA)>
+
+<!-- 
+The web-app element adds information to an web-app element in the portable
+descriptor (web.xml). Matching is done on based on the uri element
+elements.
+
+Used in: trifork-app-conf
+--> 
+<!ELEMENT web-app (uri?, context-root?, persistent-sessions?, endpoint*, env-entry*, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination*, webservice-description*)>
+
+<!-- 
+The ejb-jar element adds information to an ejb-jar element in the portable
+descriptor (ejb-jar.xml). Matching is done on based on the uri element
+elements.
+
+Used in: trifork-app-conf
+--> 
+<!ELEMENT ejb-jar (uri?)>
+
+
+<!--
+This is the element describing security configuration information for the IOR.
+-->  
+
+<!ELEMENT ior-security-config ( transport-config? , as-context?, sas-context?  )> 
+
+<!ELEMENT transport-config ( integrity?, confidentiality?,
+establish-trust-in-target?, establish-trust-in-client?, iiop-port?, ssl-iiop-port? )> 
+
+<!--
+This element indicates if the target supports integrity protected messages. The
+values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT integrity ( #PCDATA)>
+
+<!--
+This element indicates if the target supports privacy protected messages. The
+values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT confidentiality ( #PCDATA)>
+
+<!--
+This element indicates if the target is capable of authenticating to a client. 
+The values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT establish-trust-in-target ( #PCDATA)>
+
+<!--
+This element indicates if the target is capable of authenticating a client. The
+values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+This is the element describing the authentication mechanism that will be
+used to authenticate the client. If specified it will be the username-password
+mechanism.
+-->  
+<!ELEMENT as-context ( auth-method, realm, required )> 
+
+<!--
+This element specifies if the authentication method specified is required
+to be used for client authentication. If so the EstablishTrustInClient bit
+will be set in the target_requires field of the AS_Context. The element value
+is either true or false.
+-->  
+
+<!ELEMENT required ( #PCDATA )> 
+
+<!--
+This element can be used in two ways:
+If used in an as-context element it describes the authentication method. 
+In this case the only supported value is USERNAME_PASSWORD
+If used in a login-config element it describes the auth method for this web service 
+endpoint - refere to the auth-method tag for servlets for more information.
+In this case the allowable values are: BASIC or CLIENT_CERT
+
+Used in: as-context, login-config
+-->  
+<!ELEMENT auth-method ( #PCDATA )> 
+
+<!--
+This element describes the realm in which the user is authenticated.
+
+Used in: as-context, login-config
+-->  
+<!ELEMENT realm ( #PCDATA )> 
+
+<!--
+This element describes the sas-context fields.
+-->  
+
+<!ELEMENT sas-context ( caller-propagation )> 
+
+<!--
+This element indicates if the target will accept propagated caller identities
+The values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT caller-propagation ( #PCDATA) >
+
+<!-- 
+This element describes the maximum pool size to be kept for an EJB.
+-->
+<!ELEMENT max-pool-size (#PCDATA) >
+
+<!--
+This element describes the number of instances to load into an EJB
+pool when the container is started.
+-->
+<!ELEMENT default-pool-size (#PCDATA) >
+
+<!-- 
+This elemenent describes how long (in seconds) a EJB component
+instance is kept live in the pool.  After this timeout, the pooled
+instance is discarded.  
+-->
+<!ELEMENT pool-timeout (#PCDATA) >
+
+<!-- 
+This element describes how long (in millis) a stateful session bean
+is kept alive if there is no explicit call to remove.
+-->
+<!ELEMENT idle-timeout (#PCDATA) >
+
+<!-- 
+This elemenent defines the maximum number of concurrent mdb instances.  
+-->
+<!ELEMENT max-concurrent-instances (#PCDATA) >
+
+
+<!--
+Optional. This element indicates the port number to use for 
+SSL IIOP transport.  This value is only meaningful if at least one of
+integrity, confidentiality and establish-trust
+members are set to SUPPORTED or REQUIRED. Default value is 0 
+meaning that the port is dynamically allocated.
+-->  
+<!ELEMENT ssl-iiop-port ( #PCDATA)>
+
+<!--
+The element connector is used to assign a jndi-name to a connector,
+and to override the values of config-properties defined in the 
+portable descriptor.
+-->
+<!ELEMENT connector ( uri? , config-property*, outbound-resourceadapter? ) >
+
+<!--
+This element is present if the connector provides outbound connectivity
+i.e., provides resources bound in jndi that component-level code can 
+access via java:comp/env resource-ref entries.
+
+used in: connector
+-->
+<!ELEMENT outbound-resourceadapter ( connection-definition* )>
+
+<!-- 
+Defines properties (most importantly jndi name) for a specific 
+connection definition.
+
+used in: outbound-resourceadapter
+-->
+<!ELEMENT connection-definition ( uri?, jndi-name, config-property* )>
+
+<!--
+Identifies individual connection-definition specifications
+-->
+<!ATTLIST connection-definition id ID #IMPLIED>
+
+
+<!--
+The element config-property contains a declaration of a single
+configuration property for a ManagedConnectionFactory instance.
+
+Each ManagedConnectionFactory instance creates connections to a
+specific EIS instance based on the properties configured on the
+ManagedConnectionFactory instance. The configurable properties are
+specified only once in the deployment descriptor, even though a
+resource adapter can be used to configure multiple ManagedConnnection-
+Factory instances (that create connections to different instances of
+the same EIS).
+
+The declaration consists of an optional description, name, type
+and an optional value of the configuration property. If the resource
+adapter provider does not specify a value than the deployer is
+responsible for providing a valid value for a configuration property.
+
+Any bounds or well-defined values of properties should be described
+in the description element.
+
+Used in: connector, connection-definition
+-->
+<!ELEMENT config-property (config-property-name,
+config-property-type?, config-property-value)>
+
+<!-- 
+This attribute controls binding behavior for this config property.
+ null: the property will be assigned the value NULL
+ none: the property will not be assigned (setXXX will not be called)
+value: the property is bound to the specified value
+-->
+<!ATTLIST config-property 
+	  binding (null|none|value) 'value'>
+
+<!-- The element config-property-name contains the name of a
+configuration property.
+
+The connector architecture defines a set of well-defined properties
+all of type java.lang.String. These are as follows:
+     <config-property-name>ServerName</config-property-name>
+     <config-property-name>PortNumber</config-property-name>
+     <config-property-name>UserName</config-property-name>
+     <config-property-name>Password</config-property-name>
+     <config-property-name>ConnectionURL</config-property-name>
+
+A resource adapter provider can extend this property set to include
+properties specific to the resource adapter and its underlying EIS.
+
+Used in: config-property
+
+Example: <config-property-name>ServerName</config-property-name>
+-->
+<!ELEMENT config-property-name (#PCDATA)>
+
+<!--
+The element config-property-type contains the fully qualified Java
+type of a configuration property as required by ManagedConnection-
+Factory instance.
+
+The following are the legal values of config-property-type:
+   java.lang.Boolean, java.lang.String, java.lang.Integer,
+   java.lang.Double, java.lang.Byte, java.lang.Short,
+   java.lang.Long, java.lang.Float, java.lang.Character
+
+Used in: config-property
+
+Example: <config-property-type>java.lang.String</config-property-type>
+-->
+<!ELEMENT config-property-type (#PCDATA)>
+
+<!--
+The element config-property-value contains the value of a configuration
+entry.
+
+Used in: config-property
+
+Example: <config-property-value>WombatServer</config-property-value>
+-->
+<!ELEMENT config-property-value (#PCDATA)>

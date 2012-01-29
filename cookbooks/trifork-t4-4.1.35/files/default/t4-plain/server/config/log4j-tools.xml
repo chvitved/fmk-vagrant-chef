@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+
+  <!-- Setup appender -->
+  <appender name="TOOLS_LOG" class="org.apache.log4j.ConsoleAppender">
+    <param name="ImmediateFlush" value="true"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%-5p %m%n"/>
+    </layout>  
+  </appender>
+
+  <!-- Setup the client log -->
+  <category name="org.apache.commons.httpclient" additivity="false">  	
+    <priority value ="warn" />
+    <appender-ref ref="TOOLS_LOG" />
+  </category>  	
+
+  <root>
+    <priority value ="info" />
+    <appender-ref ref="TOOLS_LOG" />
+  </root>
+
+</log4j:configuration>

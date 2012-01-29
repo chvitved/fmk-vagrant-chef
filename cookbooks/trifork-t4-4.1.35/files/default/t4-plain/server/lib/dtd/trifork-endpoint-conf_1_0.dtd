@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2001 Trifork Technologies.
+
+This is the XML DTD for the Trifork endpoint configuration descriptor.
+A valid descriptor must have a DOCTYPE declaration of the form:
+
+<!DOCTYPE trifork-endpoint-conf PUBLIC 
+     "-//Trifork Technologies//DTD Trifork Endpoint Descriptor1.0//EN" 
+     "http://trifork.com/j2ee/dtds/trifork-endpoint-conf_1_0.dtd">
+-->
+
+
+<!--
+Configure AJPv13 relevant properties for a web application. If a web-app has no
+ajpv13 element, ajpv13 is disabled for the web application.  
+-->
+<!ELEMENT ajpv13 EMPTY>
+
+<!-- 
+Identifies the default value for the HTTP Host header to use for constructing
+external URLs, e.g. for redirects. This is only relevant for HTTP/1.0 clients
+since HTTP/1.1 clients must include the Host header. 
+
+Used in: endpoint
+-->
+<!ELEMENT default-host (host-name, port?)>
+
+<!-- 
+Define a named HTTP, HTTPS, or AJPv13 endpoint.
+-->
+<!ELEMENT endpoint (name, default-host?, virtual-host?, 
+http*, https*, ajpv13*)>
+
+<!--
+Configure HTTP relevant properties for a web application. If a web-app has no
+http element, then http is enabled at the server's default http port.
+
+Used in: endpoint
+-->
+<!ELEMENT http (port?)>
+
+<!--
+
+-->
+<!ELEMENT virtual-host (#PCDATA)>
+
+<!--
+Enables https connection for a web application and specifies details of https
+management. If the https element is omitted, https is disabled for the web
+application.
+
+Used in: endpoint
+-->
+<!ELEMENT https (protocol?, port?, keystore?)>
+
+<!-- 
+Specifies the key store for https
+
+Used in: https
+-->
+<!ELEMENT keystore (keystore-type?, keystore-manager?, keystore-file, keystore-passphrase?)>
+
+<!-- 
+Keystore file. Path to key store. Relative paths are resolved relative to the
+server instance directory.
+
+Used in: keystore
+-->
+<!ELEMENT keystore-file (#PCDATA)>
+
+<!-- 
+keystore manager, If not specified, the value defaults to SunX509 
+
+Used in: keystore
+-->
+<!ELEMENT keystore-manager (#PCDATA)>
+
+<!-- 
+Passphrase for the keystore. If this element is missing, the server will
+prompt for this on the console.
+
+Used in: keystore
+-->
+<!ELEMENT keystore-passphrase (#PCDATA)>
+
+<!-- 
+Supported key store type. If not specified, the value defaults to JKS.
+
+Used in: keystore
+-->
+<!ELEMENT keystore-type (#PCDATA)>
+
+<!ELEMENT name (#PCDATA)>
+
+<!--
+Specify a TCP/IP port number.
+
+Used in: http, https
+-->
+<!ELEMENT port (#PCDATA)>
+
+<!-- 
+Protocol can be one of SSLv3 or TLS, default is TLS. 
+
+Used in: https
+-->
+<!ELEMENT protocol (#PCDATA)>
+
+<!--
+Override the server name for servlet requests. 
+
+Used in: default-host
+-->
+<!ELEMENT host-name (#PCDATA)>
+
+<!ELEMENT trifork-endpoint-conf (endpoint*)>

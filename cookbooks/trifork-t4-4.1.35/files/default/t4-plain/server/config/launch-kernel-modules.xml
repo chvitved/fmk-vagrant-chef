@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE kernel-config PUBLIC "Trifork Kernel Modules" "http://www.trifork.com/dtds/eas/kernel-modules.dtd">
+
+<kernel-config>
+  <system>
+    <property 
+          name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.eas.jts.JTSLoader"
+          value="42" />
+
+    <property name="org.omg.PortableInterceptor.ORBInitializerClass.com.trifork.eas.csi.CSILoader" value="42" />
+ 
+    <classpath>
+      ${trifork.install.dir}/lib/security.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/modelbuilder.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jmxtools.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/bytecode.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/rmi.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/corba.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/easmail.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/costx.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/orb.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/management.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/naming.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jts1_1.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/threadpool.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/jdbcpool.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/log.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/http.jar
+    </classpath>
+    <classpath>
+      ${trifork.install.dir}/lib/tcp.jar
+    </classpath>
+  </system>
+  
+  <kernel class="com.trifork.eas.launch.LaunchKernel">
+<!--    <kernlet class="com.trifork.eas.naming.COSINSBasedNamingModule">
+      <property name="hostExternalNamingManager" value="false"/>
+    </kernlet> -->
+
+
+<!--    <kernlet class="com.trifork.eas.costx.CosTXKernlet">
+      <property name="JTSName" value="com/trifork/JTS"/>
+    </kernlet> -->
+
+<!--    <kernlet class="com.trifork.eas.jdbcpool.JdbcPoolKernlet">
+      <property name="loadDataSourcesOnStartup" value="false"/>
+    </kernlet> -->
+
+<!--    <kernlet class="com.trifork.eas.orb.DefaultOrbKernlet"/> -->
+      
+    <kernlet class="com.trifork.eas.log.Log4jKernlet"/>
+
+    <kernlet class="com.trifork.eas.http.HTTPKernlet"/>
+
+    <kernlet class="com.trifork.eas.tcp.TCPKernlet"/>
+
+    <kernlet class="com.trifork.eas.threadpool.ThreadPoolKernlet"/>
+
+    <kernlet class="com.trifork.eas.launch.LaunchKernlet"/>
+
+<!--    <kernlet class="com.trifork.eas.client.DefaultClientContainer"/> -->
+  </kernel>
+</kernel-config>
+

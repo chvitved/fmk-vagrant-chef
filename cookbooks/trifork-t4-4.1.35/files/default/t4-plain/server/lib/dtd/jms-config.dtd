@@ -1,0 +1,62 @@
+<!--
+  DTD for Trifork JMS Provider
+  Author: Kresten Krab THorup <krab@trifork.com>
+  $Id: jms-config.dtd,v 1.3 2001-11-27 17:35:35 krab Exp $
+-->
+
+<!ELEMENT jms-config (authorization-realm?,
+                      jndi-name?,
+                      datasource,
+                      default-user?,
+                      default-password?,
+                      (topic-connection-factory | queue-connection-factory | 
+                       topic | queue )*,
+                      security-constraint*)>
+
+<!ELEMENT datasource (description?, jndi-name, (jdbc-user, jdbc-password)?)>
+<!ELEMENT jdbc-user (#PCDATA)>
+<!ELEMENT jdbc-password (#PCDATA)>
+
+<!ELEMENT topic-connection-factory (description?, jndi-name, xa-aware?, 
+                                    default-user?, default-password?,
+                                    client-id?)>
+
+<!ELEMENT topic (description?, topic-name, jndi-name)>
+<!ELEMENT topic-name (#PCDATA)>
+
+
+<!ELEMENT queue-connection-factory (description?, jndi-name, xa-aware?, 
+                                    default-user?, default-password?,
+                                    client-id?)>
+
+<!ELEMENT queue (description?, queue-name, jndi-name)>
+<!ELEMENT queue-name (#PCDATA)>
+
+<!ELEMENT jndi-name (#PCDATA)>
+<!ELEMENT client-id (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT authorization-realm (#PCDATA)>
+
+<!ELEMENT default-user (#PCDATA)>
+<!ELEMENT default-password (#PCDATA)>
+
+<!-- 
+     Describes if the containing connection factory will produce
+     XA-aware connections, sessions a.s.o.
+  -->
+<!ELEMENT xa-aware (#PCDATA)>
+
+<!ELEMENT security-constraint (description?, 
+			       authorization-realm?,
+			       operation-collection, 
+			       auth-constraint)>
+
+<!ELEMENT operation-collection (operation+)>
+
+<!ELEMENT operation (action?, (queue-name|topic-name))>
+
+<!ELEMENT auth-constraint (role-name+)>
+
+<!ELEMENT role-name (#PCDATA)>
+
