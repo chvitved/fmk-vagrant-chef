@@ -1,0 +1,45 @@
+task fmk << {
+	println("To download artefacts from jenkins please provide username and password")
+	ant.input(message: "jenkins username:", addproperty: "username")
+	ant.input(message: "jenkins password:", addproperty: "password") {
+		handler(classname: "org.apache.tools.ant.input.SecureInputHandler")
+	}
+	project.username = ant.properties['username']
+	project.password = ant.properties['password']
+	
+	def urlBase = "https://ci82.trifork.com/view/FMK/job/FMK_trunk/lastSuccessfulBuild/artifact/trunk/"
+    fetchFile(urlBase + "target/medicinkortet12.war")
+    fetchFile(urlBase + "lib/build/trifork-initdb.xml")
+    fetchFile(urlBase + "lib/build/trifork-mkt.dump.sql.zip")
+    fetchFile(urlBase + "lib/build/trifork-sdmmkt.dump.sql.zip")
+}
+
+task initdb << {
+	exec("mysql -uroot < drop.sql", false)
+	exec("mysql -uroot < loaddb.sql", false)
+	exec("unzip -p trifork-mkt.dump.sql.zip | mysql -umkt -pmkt mkt")
+	exec("unzip -p trifork-sdmmkt.dump.sql.zip | mysql -umkt -pmkt sdmmkt")
+}
+
+void exec(command, failOnError=true, dir=workingDir) {
+	println("executing " + command)
+	ant.exec(executable: "/bin/sh", dir: workingdir, failonerror: failOnError) {
+		arg(value: "-c")
+		arg(value: command)
+	}
+}
+
+
+File fetchFile(address, dir=workingDir) {
+	def file = new File(dir + address.tokenize("/")[-1])
+    def fos = new FileOutputStream(file)
+    def out = new BufferedOutputStream(fos)
+    def url = new URL(address)
+    println("fetching file " + url + " to " + file)
+    def urlConnection = url.openConnection()
+    def encoding = new sun.misc.BASE64Encoder().encode ((username + ":" + password).getBytes())
+	urlConnection.setRequestProperty("Authorization", "Basic " + encoding)
+    out << urlConnection.getInputStream()
+    out.close()
+    file
+}
