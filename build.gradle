@@ -1,29 +1,70 @@
-task fmk << {
+task fmkFetch(dependsOn: 'loginToJenkins') << {
+	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/trunk/"
+    fetchFile(urlBase + "target/medicinkortet12.war")
+    fetchFile(urlBase + "target/oiosaml.zip")
+    fetchFile(urlBase + "lib/build/trifork-initdb.xml")
+    fetchFile(urlBase + "lib/build/trifork-mkt.dump.sql.zip")
+    fetchFile(urlBase + "lib/build/trifork-sdmmkt.dump.sql.zip")
+	
+	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-medicinkortet')
+}
+
+task fmk() << {
+	exec(t4Exec + " system create fmk", false)
+	exec(t4Exec + " archive deploy fmk medicinkortet12.war")
+}
+
+task sdmFetch(dependsOn: 'loginToJenkins') << {
+	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/trunk/"
+	fetchFile(urlBase + "target/stamdata-modulet.war")
+    fetchFile(urlBase + "target/oiosaml.zip")	
+	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-stamdata-modulet')
+}
+
+task sdm() << {
+	exec(t4Exec + " system create sdm", false)
+	exec(t4Exec + " archive deploy sdm stamdata-modulet.war")
+}
+
+task fmkWebFetch(dependsOn: 'loginToJenkins') << {
+	def urlBase = jenkinsUrl + "/job/medicinkortet-web/lastSuccessfulBuild/artifact/trunk/"
+	fetchFile(urlBase + "target/medicinkortet-web.war")
+	fetchFile(urlBase + "target/oiosaml.zip")	
+	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-medicinkortet-gui')
+}
+
+task fmkWeb() << {
+	exec(t4Exec + " system create fmk-web", false)
+	exec(t4Exec + " archive deploy fmk-web medicinkortet-web.war")
+}
+
+task loginToJenkins << {
 	println("To download artefacts from jenkins please provide username and password")
+	println("Input username...")
 	ant.input(message: "jenkins username:", addproperty: "username")
 	ant.input(message: "jenkins password:", addproperty: "password") {
 		handler(classname: "org.apache.tools.ant.input.SecureInputHandler")
 	}
 	project.username = ant.properties['username']
 	project.password = ant.properties['password']
-	
-	def urlBase = "https://ci82.trifork.com/view/FMK/job/FMK_trunk/lastSuccessfulBuild/artifact/trunk/"
-    fetchFile(urlBase + "target/medicinkortet12.war")
-    fetchFile(urlBase + "lib/build/trifork-initdb.xml")
-    fetchFile(urlBase + "lib/build/trifork-mkt.dump.sql.zip")
-    fetchFile(urlBase + "lib/build/trifork-sdmmkt.dump.sql.zip")
 }
 
-task initdb << {
-	exec("mysql -uroot < drop.sql", false)
-	exec("mysql -uroot < loaddb.sql", false)
+task initdb(dependsOn: 'fmkFetch') << {
+	exec("mysql -uroot < drop.sql", false, projectDir)
+	exec("mysql -uroot < loaddb.sql", false, projectDir)
 	exec("unzip -p trifork-mkt.dump.sql.zip | mysql -umkt -pmkt mkt")
 	exec("unzip -p trifork-sdmmkt.dump.sql.zip | mysql -umkt -pmkt sdmmkt")
 }
 
+void moveOioSaml(zipFile, name) {
+	def dir = '/home/vagrant/' + name
+	new File(dir).mkdir()
+	ant.unzip(src: zipFile, dest: dir)
+}
+
 void exec(command, failOnError=true, dir=workingDir) {
 	println("executing " + command)
-	ant.exec(executable: "/bin/sh", dir: workingdir, failonerror: failOnError) {
+	ant.exec(executable: "/bin/sh", dir: dir, failonerror: failOnError) {
 		arg(value: "-c")
 		arg(value: command)
 	}

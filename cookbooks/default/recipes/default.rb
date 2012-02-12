@@ -1,3 +1,5 @@
+user = "vagrant"
+
 apt_repository "best mirror" do
   uri "mirror://mirrors.ubuntu.com/mirrors.txt"
   components ["main", "restricted", "universe", "multiverse", "lucid-updates"]
@@ -5,8 +7,8 @@ apt_repository "best mirror" do
 end
 
 directory "/pack" do
-  owner "root"
-  group "root"
+  owner user
+  group user
   mode "0755"
   action :create
 end

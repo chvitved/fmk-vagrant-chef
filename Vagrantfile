@@ -24,6 +24,7 @@ Vagrant::Config.run do |config|
   #config.vm.forward_port  80, 8000
    config.vm.forward_port  3306, 3306
    config.vm.forward_port  8080, 8080
+   config.vm.forward_port  8090, 8090
    config.vm.forward_port  8098, 8098
 
   # Share an additional folder to the guest VM. The first argument is
@@ -35,13 +36,13 @@ Vagrant::Config.run do |config|
   # to this Vagrantfile), and adding some recipes and/or roles.
   #
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "cookbooks"
-    chef.add_recipe "default" 
-    chef.add_recipe "riak"
-    chef.add_recipe "java"
-    chef.add_recipe "gradle::tarball" 
-    chef.add_recipe "mysql::server"
-    chef.add_recipe "trifork-t4-4.1.35"
+    #chef.cookbooks_path = "cookbooks"
+    #chef.add_recipe "default" 
+    #chef.add_recipe "riak"
+    #chef.add_recipe "java"
+    #chef.add_recipe "gradle::tarball" 
+    #chef.add_recipe "mysql::server"
+    #chef.add_recipe "trifork-t4-4.1.35"
     chef.add_recipe "fmk"
 
  
