@@ -1,3 +1,16 @@
+task all << {
+	// having problems with gradle and dependsOn which does not look to be ordered
+	loginToJenkins.execute()
+	fmkFetch.execute()
+	initdb.execute()
+	fmk.execute()
+	sdmFetch().execute()
+	sdm.execute()
+	fmkWebFetch.execute()
+	fmkWeb.execute()
+	
+}
+
 task fmkFetch(dependsOn: 'loginToJenkins') << {
 	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/trunk/"
     fetchFile(urlBase + "target/medicinkortet12.war")
