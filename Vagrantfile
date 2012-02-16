@@ -19,6 +19,13 @@ Vagrant::Config.run do |config|
   # via the IP.
   ipAddress = "172.24.24.24"
   config.vm.network :hostonly, ipAddress
+  
+  config.vm.customize [
+ 	"modifyvm", :id,
+  	"--name", "FMK VM",
+  	"--memory", "2048"
+  ]
+  
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
    config.vm.forward_port  3306, 3306
@@ -46,17 +53,15 @@ Vagrant::Config.run do |config|
     chef.add_recipe "fmk"
 
  
-    #   # You may also specify custom JSON attributes:
+    # You may also specify custom JSON attributes:
     chef.json.merge!({
       :mysql => {
         :server_root_password => "",
-	:bind_address => "0.0.0.0",
-	:allow_remote_root => true
-#        :server_repl_password => "supersecret",
-#        :server_debian_password => "supersecret"  
+		:bind_address => "0.0.0.0",
+		:allow_remote_root => true  
       },
       :riak => {
-	:core => {:http => [["0.0.0.0", 8098]] }
+		:core => {:http => [["0.0.0.0", 8098]] }
       }  
     })
    

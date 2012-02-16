@@ -1,10 +1,11 @@
 task all << {
 	// having problems with gradle and dependsOn which does not look to be ordered
+	// workaround like this
 	loginToJenkins.execute()
 	fmkFetch.execute()
 	initdb.execute()
 	fmk.execute()
-	sdmFetch().execute()
+	sdmFetch.execute()
 	sdm.execute()
 	fmkWebFetch.execute()
 	fmkWeb.execute()
