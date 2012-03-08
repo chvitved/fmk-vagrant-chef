@@ -47,6 +47,7 @@ Vagrant::Config.run do |config|
     chef.add_recipe "default" 
     chef.add_recipe "riak"
     chef.add_recipe "java"
+    chef.add_recipe "ant"
     chef.add_recipe "gradle::tarball" 
     chef.add_recipe "mysql::server"
     chef.add_recipe "trifork-t4-4.1.35"
@@ -62,7 +63,10 @@ Vagrant::Config.run do |config|
       },
       :riak => {
 		:core => {:http => [["0.0.0.0", 8098]] }
-      }  
+      },
+      :java => {
+        :install_flavor => "oracle"
+      }
     })
    
   end

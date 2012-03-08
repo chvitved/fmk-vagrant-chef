@@ -84,7 +84,6 @@ void exec(command, failOnError=true, dir=workingDir) {
 	}
 }
 
-
 File fetchFile(address, dir=workingDir) {
 	def file = new File(dir + address.tokenize("/")[-1])
     def fos = new FileOutputStream(file)

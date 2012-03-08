@@ -1,9 +1,8 @@
 #
-# Author:: Seth Chisamore (<schisamo@opscode.com>)
-# Cookbook Name:: java
+# Cookbook Name:: ant
 # Recipe:: default
 #
-# Copyright 2008-2011, Opscode, Inc.
+# Copyright 2010, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,4 +17,25 @@
 # limitations under the License.
 #
 
-include_recipe "java::#{node['java']['install_flavor']}"
+include_recipe "java"
+
+case node.platform
+when "centos","redhat","fedora"
+  include_recipe "jpackage"
+end
+
+ant_pkgs = value_for_platform(
+  ["debian","ubuntu",] => {
+    "default" => ["ant","ant-contrib","ivy"]
+  },
+  ["centos","redhat","fedora" ] => {
+    "default" => ["ant","ant-contrib","ivy"]
+  },
+  "default" => ["ant","ant-contrib","ivy"]
+)
+
+ant_pkgs.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
