@@ -10,7 +10,7 @@ Vagrant::Config.run do |config|
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  #config.vm.box_url = "http://cant remember"
+  #config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -48,6 +48,7 @@ Vagrant::Config.run do |config|
     chef.add_recipe "riak"
     chef.add_recipe "java"
     chef.add_recipe "ant"
+    chef.add_recipe "git"
     chef.add_recipe "gradle::tarball" 
     chef.add_recipe "mysql::server"
     chef.add_recipe "trifork-t4-4.1.35"

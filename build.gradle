@@ -13,7 +13,7 @@ task all << {
 }
 
 task fmkFetch(dependsOn: 'loginToJenkins') << {
-	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/trunk/"
+	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/"
     fetchFile(urlBase + "target/medicinkortet12.war")
     fetchFile(urlBase + "target/oiosaml.zip")
     fetchFile(urlBase + "lib/build/trifork-initdb.xml")
