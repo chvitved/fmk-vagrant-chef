@@ -52,6 +52,7 @@ Vagrant::Config.run do |config|
     chef.add_recipe "mysql::server"
     chef.add_recipe "trifork-t4-4.1.35"
     chef.add_recipe "fmk"
+    chef.add_recipe "timezone"
 
  
     # You may also specify custom JSON attributes:
@@ -66,7 +67,8 @@ Vagrant::Config.run do |config|
       },
       :java => {
         :install_flavor => "oracle"
-      }
+      },
+      :tz => "Europe/Copenhagen"
     })
    
   end
