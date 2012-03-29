@@ -1,11 +1,6 @@
-#YAML::Load(File.open("file"))
 props = eval(File.open('myconfig') {|f| f.read })
 Vagrant::Config.run do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # Every Vagrant virtual environment requires a box to build off of.
+ 
   config.vm.box = "base64"
 
   # The url from where the 'config.vm.box' box will be fetched if it
@@ -37,6 +32,7 @@ Vagrant::Config.run do |config|
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
+  # props are loaded at the top from the file myconfig
   config.vm.share_folder "projects", "/projects", props[:projects]
   
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
