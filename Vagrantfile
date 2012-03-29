@@ -66,7 +66,7 @@ Vagrant::Config.run do |config|
 		:core => {:http => [["0.0.0.0", 8098]] }
       },
       :java => {
-        :install_flavor => "oracle"
+        :install_flavor => "openjdk"
       },
       :tz => "Europe/Copenhagen"
     })
