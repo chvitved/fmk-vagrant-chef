@@ -1,1 +1,10 @@
 organisae homemade cookbooks
+use oracle java
+	sudo apt-get install python-software-properties
+	sudo add-apt-repository ppa:ferramroberto/java
+	sudo apt-get update
+	sudo apt-get install sun-java6-jdk
+	sudo update-alternatives --config java
+	export JAVA_HOME=/usr/lib/jvm/java-6-sun
+
+make symlink to /pack/trifork (not /pack/trifork/trifork-1.4.xxx

@@ -23,11 +23,12 @@ Vagrant::Config.run do |config|
   
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
-   config.vm.forward_port  3306, 3306
-   config.vm.forward_port  8080, 8080
-   config.vm.forward_port  8090, 8090
-   config.vm.forward_port  8000, 8000
-   config.vm.forward_port  8098, 8098
+   config.vm.forward_port  3306, 3306  #mysql
+   config.vm.forward_port  8080, 8080  #t4 web
+   config.vm.forward_port  8090, 8090  #t4 console
+   config.vm.forward_port  8000, 8000  #t4 java debug port
+   config.vm.forward_port  8098, 8098  #riak http 
+   config.vm.forward_port  8087, 8087  #riak pb
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
@@ -59,12 +60,16 @@ Vagrant::Config.run do |config|
 		:allow_remote_root => true  
       },
       :riak => {
-		:core => {:http => [["0.0.0.0", 8098]] }
+		:core => {:http => [["0.0.0.0", 8098]] },
+		:kv => {
+			:pb_ip => "0.0.0.0",
+			:pb_port => 8087
+		}
       },
       :java => {
         :install_flavor => "openjdk"
       },
-      :tz => "Europe/Copenhagen"
+    :tz => "Europe/Copenhagen"
     })
    
   end

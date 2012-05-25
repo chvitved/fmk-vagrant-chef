@@ -75,7 +75,7 @@ action :install do
       cmd = Chef::ShellOut.new(
                                %Q[ cd "#{tmpdir}";
                                    cp "#{Chef::Config[:file_cache_path]}/#{tarball_name}" . ;
-                                   bash ./#{tarball_name} -noregister
+                                   bash ./#{tarball_name} --accept-license --unpack
                                  ] ).run_command
       unless cmd.exitstatus == 0
         Chef::Application.fatal!("Failed to extract file #{tarball_name}!")
