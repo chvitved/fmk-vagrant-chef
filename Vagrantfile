@@ -20,6 +20,7 @@ Vagrant::Config.run do |config|
   	"--name", "FMK VM",
   	"--memory", "2048"
   ]
+  config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
