@@ -8,6 +8,10 @@ directory install_dir do
   action :create
 end
 
+link "/pack/trifork" do
+    to install_dir
+end
+
 remote_directory install_dir do
   source "t4-plain"
   files_backup 0
