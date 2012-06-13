@@ -35,7 +35,7 @@ directory install_dir + "/server/license" do
   action :create
 end
 
-remote_file install_dir + "/server/license/license.txt" do
+cookbook_file install_dir + "/server/license/license.txt" do
   source "license.txt"
   mode "0755"
 end

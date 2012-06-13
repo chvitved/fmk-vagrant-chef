@@ -1,12 +1,12 @@
 props = eval(File.open('myconfig') {|f| f.read })
 Vagrant::Config.run do |config|
  
-  config.vm.box = "base64"
+  config.vm.box = "base32"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
-
+  #config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
+  config.vm.box_url = "http://nexus.ci82.trifork.com/content/repositories/trifork-internal/vagrantfiles/lucid32/1/lucid32-1.box"
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
 
@@ -20,7 +20,7 @@ Vagrant::Config.run do |config|
   	"--name", "FMK VM",
   	"--memory", "2048"
   ]
-  config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # make the vpn connection from the host machine work for the image
   
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
@@ -37,6 +37,7 @@ Vagrant::Config.run do |config|
   # folder, and the third is the path on the host to the actual folder.
   # props are loaded at the top from the file myconfig
   config.vm.share_folder "projects", "/projects", props[:projects]
+  config.vm.share_folder "ivy", "/home/vagrant/.ivy2", props[:ivy2]
   
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
   # to this Vagrantfile), and adding some recipes and/or roles.
@@ -71,7 +72,8 @@ Vagrant::Config.run do |config|
       :java => {
         :install_flavor => "openjdk"
       },
-    :tz => "Europe/Copenhagen"
+      :gradle => {:version=>"1.0"},
+      :tz => "Europe/Copenhagen"
     })
    
   end

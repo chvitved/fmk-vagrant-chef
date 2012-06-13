@@ -64,8 +64,8 @@ task loginToJenkins << {
 	ant.input(message: "jenkins password:", addproperty: "password") {
 		handler(classname: "org.apache.tools.ant.input.SecureInputHandler")
 	}
-	project.username = ant.properties['username']
-	project.password = ant.properties['password']
+	project.ext.username = ant.properties['username']
+	project.ext.password = ant.properties['password']
 }
 
 task initdb(dependsOn: 'fmkFetch') << {

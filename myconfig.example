@@ -1,3 +1,4 @@
 {
-    :projects   => '/Users/chr/workspace'
+    :projects   => '/Users/chr/workspace',
+    :ivy2 	=> '/Users/chr/.ivy2'
 }
