@@ -27,6 +27,7 @@ Vagrant::Config.run do |config|
    config.vm.forward_port  3306, 3306  #mysql
    config.vm.forward_port  8080, 8080  #t4 web
    config.vm.forward_port  8090, 8090  #t4 console
+   config.vm.forward_port  8070, 8070  #t4 deploy
    config.vm.forward_port  8000, 8000  #t4 java debug port
    config.vm.forward_port  8098, 8098  #riak http 
    config.vm.forward_port  8087, 8087  #riak pb
