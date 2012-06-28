@@ -41,7 +41,7 @@ task sdm() << {
 }
 
 task fmkWebFetch(dependsOn: 'loginToJenkins') << {
-	def urlBase = jenkinsUrl + "/job/medicinkortet-web/lastSuccessfulBuild/artifact/trunk/"
+	def urlBase = jenkinsUrl + "/job/medicinkortet-web/lastSuccessfulBuild/artifact/"
 	fetchFile(urlBase + "target/medicinkortet-web.war")
 	fetchFile(urlBase + "target/oiosaml.zip")	
 	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-medicinkortet-gui')

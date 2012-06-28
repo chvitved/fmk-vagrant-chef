@@ -18,7 +18,8 @@ Vagrant::Config.run do |config|
   config.vm.customize [
  	"modifyvm", :id,
   	"--name", "FMK VM",
-  	"--memory", "2048"
+  	"--memory", "2048",
+	"--cpus", "2"
   ]
   config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # make the vpn connection from the host machine work for the image
   
