@@ -48,8 +48,8 @@ task fmkWebFetch(dependsOn: 'loginToJenkins') << {
 }
 
 task fmkWeb() << {
-	exec(t4Exec + " system create fmk-web", false)
-	exec(t4Exec + " archive deploy fmk-web medicinkortet-web.war")
+	exec(t4Exec + " system create gui", false)
+	exec(t4Exec + " archive deploy gui medicinkortet-web.war")
 }
 
 task replicaFetch(dependsOn: 'loginToJenkins') << {
