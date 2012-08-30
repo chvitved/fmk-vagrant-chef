@@ -1,7 +1,6 @@
 task all << {
 	// having problems with gradle and dependsOn which does not look to be ordered
 	// workaround like this
-	loginToJenkins.execute()
 	fmkFetch.execute()
 	initdb.execute()
 	fmk.execute()
@@ -12,7 +11,7 @@ task all << {
 	
 }
 
-task fmkFetch(dependsOn: 'loginToJenkins') << {
+task fmkFetch() << {
 	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/"
     fetchFile(urlBase + "target/medicinkortet12.war")
     fetchFile(urlBase + "target/oiosaml.zip")
@@ -27,7 +26,7 @@ task fmk() << {
 	exec(t4Exec + " archive deploy fmk medicinkortet12.war")
 }
 
-task sdmFetch(dependsOn: 'loginToJenkins') << {
+task sdmFetch() << {
 	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/"
 	fetchFile(urlBase + "target/fmk-stamdata-modulet.war")
     fetchFile(urlBase + "target/oiosaml.zip")	
@@ -39,7 +38,7 @@ task sdm() << {
 	exec(t4Exec + " archive deploy sdm fmk-stamdata-modulet.war")
 }
 
-task fmkWebFetch(dependsOn: 'loginToJenkins') << {
+task fmkWebFetch() << {
 	def urlBase = jenkinsUrl + "/job/medicinkortet-web/lastSuccessfulBuild/artifact/"
 	fetchFile(urlBase + "target/medicinkortet-web.war")
 	fetchFile(urlBase + "target/oiosaml.zip")	
@@ -51,20 +50,9 @@ task fmkWeb() << {
 	exec(t4Exec + " archive deploy fmk-web medicinkortet-web.war")
 }
 
-task replicaFetch(dependsOn: 'loginToJenkins') << {
+task replicaFetch() << {
 	def urlBase = jenkinsUrl + "/job/recept-replikering_Riak/lastSuccessfulBuild/artifact/trunk/"
 	fetchFile(urlBase + "target/recept-replikering-all.jar")
-}
-
-task loginToJenkins << {
-	println("To download artefacts from jenkins please provide username and password")
-	println("Input username...")
-	ant.input(message: "jenkins username:", addproperty: "username")
-	ant.input(message: "jenkins password:", addproperty: "password") {
-		handler(classname: "org.apache.tools.ant.input.SecureInputHandler")
-	}
-	project.ext.username = ant.properties['username']
-	project.ext.password = ant.properties['password']
 }
 
 task initdb(dependsOn: 'fmkFetch') << {
@@ -95,7 +83,7 @@ File fetchFile(address, dir=workingDir) {
     def url = new URL(address)
     println("fetching file " + url + " to " + file)
     def urlConnection = url.openConnection()
-    def encoding = new sun.misc.BASE64Encoder().encode ((username + ":" + password).getBytes())
+    def encoding = new sun.misc.BASE64Encoder().encode("chr:4446aa5477f737cbc899ecd0ab1133ef".getBytes())
 	urlConnection.setRequestProperty("Authorization", "Basic " + encoding)
     out << urlConnection.getInputStream()
     out.close()
