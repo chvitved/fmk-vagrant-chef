@@ -16,9 +16,8 @@ task fmkFetch(dependsOn: 'loginToJenkins') << {
 	def urlBase = jenkinsUrl + "/job/FMK_trunk/lastSuccessfulBuild/artifact/"
     fetchFile(urlBase + "target/medicinkortet12.war")
     fetchFile(urlBase + "target/oiosaml.zip")
-    fetchFile(urlBase + "lib/build/trifork-initdb.xml")
-    fetchFile(urlBase + "lib/build/trifork-mkt.dump.sql.zip")
-    fetchFile(urlBase + "lib/build/trifork-sdmmkt.dump.sql.zip")
+    fetchFile(urlBase + "lib/build/com.trifork-mkt.dump.sql.zip")
+    fetchFile(urlBase + "lib/build/com.trifork-sdmmkt.dump.sql.zip")
 	
 	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-medicinkortet')
 }
@@ -29,15 +28,15 @@ task fmk() << {
 }
 
 task sdmFetch(dependsOn: 'loginToJenkins') << {
-	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/trunk/"
-	fetchFile(urlBase + "target/stamdata-modulet.war")
+	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/"
+	fetchFile(urlBase + "target/fmk-stamdata-modulet.war")
     fetchFile(urlBase + "target/oiosaml.zip")	
 	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-stamdata-modulet')
 }
 
 task sdm() << {
 	exec(t4Exec + " system create sdm", false)
-	exec(t4Exec + " archive deploy sdm stamdata-modulet.war")
+	exec(t4Exec + " archive deploy sdm fmk-stamdata-modulet.war")
 }
 
 task fmkWebFetch(dependsOn: 'loginToJenkins') << {
@@ -71,8 +70,8 @@ task loginToJenkins << {
 task initdb(dependsOn: 'fmkFetch') << {
 	exec("mysql -uroot < drop.sql", false, projectDir)
 	exec("mysql -uroot < loaddb.sql", false, projectDir)
-	exec("unzip -p trifork-mkt.dump.sql.zip | mysql -umkt -pmkt mkt")
-	exec("unzip -p trifork-sdmmkt.dump.sql.zip | mysql -umkt -pmkt sdmmkt")
+	exec("unzip -p com.trifork-mkt.dump.sql.zip | mysql -umkt -pmkt mkt")
+	exec("unzip -p com.trifork-sdmmkt.dump.sql.zip | mysql -umkt -pmkt sdmmkt")
 }
 
 void moveOioSaml(zipFile, name) {
