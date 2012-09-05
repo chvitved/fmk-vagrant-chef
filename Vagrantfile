@@ -45,17 +45,17 @@ Vagrant::Config.run do |config|
   #
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
-    chef.add_recipe "default" 
     chef.add_recipe "riak"
+    chef.add_recipe "default" # default start risk as there is a bug. riak cookbook at github blames this on the chef version
     chef.add_recipe "java"
     chef.add_recipe "ant"
     chef.add_recipe "gradle::tarball" 
     chef.add_recipe "mysql::server"
+
     chef.add_recipe "trifork-t4-4.1.35"
     chef.add_recipe "fmk"
     chef.add_recipe "timezone"
 
- 
     # You may also specify custom JSON attributes:
     chef.json.merge!({
       :mysql => {
@@ -63,11 +63,11 @@ Vagrant::Config.run do |config|
 		:bind_address => "0.0.0.0",
 		:allow_remote_root => true  
       },
-      :riak => {
-		:core => {:http => [["0.0.0.0", 8098]] },
-		:kv => {
-			:pb_ip => "0.0.0.0",
-			:pb_port => 8087
+	# I could not make all the riak attributes work when putting them in here instead I have changed the riak cookbook attributes/default.rb
+	:riak => {:config => {
+			:riak_kv => {
+				:storage_backend => "riak_kv_eleveldb_backend"
+			}
 		}
       },
       :java => {
