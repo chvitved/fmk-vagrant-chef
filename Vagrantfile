@@ -19,7 +19,7 @@ Vagrant::Config.run do |config|
  	"modifyvm", :id,
   	"--name", "FMK VM",
   	"--memory", "2048",
-	"--cpus", "2"
+	"--cpus", "4"
   ]
   config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # make the vpn connection from the host machine work for the image
   
@@ -55,7 +55,7 @@ Vagrant::Config.run do |config|
     chef.add_recipe "trifork-t4-4.1.35"
     chef.add_recipe "fmk"
     chef.add_recipe "timezone"
-
+    chef.add_recipe "ntp"
     # You may also specify custom JSON attributes:
     chef.json.merge!({
       :mysql => {
