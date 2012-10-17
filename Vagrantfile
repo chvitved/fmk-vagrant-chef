@@ -6,15 +6,14 @@ Vagrant::Config.run do |config|
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   #config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
-  config.vm.box_url = "http://nexus.ci82.trifork.com/content/repositories/trifork-internal/vagrantfiles/lucid32/1/lucid32-1.box"
+  config.vm.box_url = "http://nexus.ci82.trifork.com/content/repositories/trifork-internal/vagrantfiles/lucid32/2/lucid32-2.box"
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
 
   # Assign this VM to a host only network IP, allowing you to access it
   # via the IP.
-  ipAddress = "172.24.24.24"
-  config.vm.network :hostonly, ipAddress
-  
+  config.vm.network :hostonly,  "33.33.33.10"  
+
   config.vm.customize [
  	"modifyvm", :id,
   	"--name", "FMK VM",
@@ -39,6 +38,7 @@ Vagrant::Config.run do |config|
   # props are loaded at the top from the file myconfig
   config.vm.share_folder "projects", "/projects", props[:projects]
   config.vm.share_folder "ivy", "/home/vagrant/.ivy2", props[:ivy2]
+  #config.vm.share_folder "v-root", "/vagrant", "."
   
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
   # to this Vagrantfile), and adding some recipes and/or roles.
