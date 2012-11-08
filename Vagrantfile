@@ -71,7 +71,10 @@ Vagrant::Config.run do |config|
 		}
       },
       :java => {
-        :install_flavor => "openjdk"
+        :install_flavor => "oracle",
+	:oracle => {
+       	  "accept_oracle_download_terms" => true
+        }
       },
       :gradle => {:version=>"1.0"},
       :tz => "Europe/Copenhagen"
