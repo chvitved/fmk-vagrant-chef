@@ -1,12 +1,11 @@
 props = eval(File.open('myconfig') {|f| f.read })
 Vagrant::Config.run do |config|
  
-  config.vm.box = "base32"
+  config.vm.box = "precise64"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  #config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
-  config.vm.box_url = "http://nexus.ci82.trifork.com/content/repositories/trifork-internal/vagrantfiles/lucid32/2/lucid32-2.box"
+  config.vm.box_url = "http://nexus.ci82.trifork.com/content/repositories/trifork-internal/vagrantfiles/precise64/1/precise64-1.box"
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
 
@@ -52,11 +51,12 @@ Vagrant::Config.run do |config|
     chef.add_recipe "gradle::tarball" 
     chef.add_recipe "mysql::server"
 
-    chef.add_recipe "trifork-t4-4.1.35"
-    chef.add_recipe "fmk"
-    chef.add_recipe "timezone"
-    chef.add_recipe "ntp"
-    # You may also specify custom JSON attributes:
+   chef.add_recipe "trifork-t4-4.1.35"
+   chef.add_recipe "fmk"
+   chef.add_recipe "timezone"
+   chef.add_recipe "ntp"
+ 
+# You may also specify custom JSON attributes:
     chef.json.merge!({
       :mysql => {
         :server_root_password => "",
@@ -71,6 +71,7 @@ Vagrant::Config.run do |config|
 		}
       },
       :java => {
+	:arch => "x86_64",
         :install_flavor => "oracle",
 	:oracle => {
        	  "accept_oracle_download_terms" => true

@@ -58,8 +58,8 @@ task replicaFetch() << {
 task initdb(dependsOn: 'fmkFetch') << {
 	exec("mysql -uroot < drop.sql", false, projectDir)
 	exec("mysql -uroot < loaddb.sql", false, projectDir)
-	exec("unzip -p com.trifork-mkt.dump.sql.zip | mysql -umkt -pmkt mkt")
-	exec("unzip -p com.trifork-sdmmkt.dump.sql.zip | mysql -umkt -pmkt sdmmkt")
+	exec("unzip -p com.trifork-mkt.dump.sql.zip | mysql -uroot mkt")
+	exec("unzip -p com.trifork-sdmmkt.dump.sql.zip | mysql -uroot sdmmkt")
 }
 
 void moveOioSaml(zipFile, name) {

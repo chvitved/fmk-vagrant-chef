@@ -28,3 +28,9 @@ template "/home/" + usr + "/.bash_profile"  do
     owner usr
 end
 
+#HACK
+#somehow one recipe end up making open jdk the default
+#we need oracle
+link "/usr/lib/jvm/default-java" do
+    to "/usr/lib/jvm/jdk1.6.0_37"
+end
