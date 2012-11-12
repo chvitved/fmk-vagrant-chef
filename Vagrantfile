@@ -60,8 +60,8 @@ Vagrant::Config.run do |config|
     chef.json.merge!({
       :mysql => {
         :server_root_password => "",
-		:bind_address => "0.0.0.0",
-		:allow_remote_root => true  
+	:bind_address => "0.0.0.0",
+	:allow_remote_root => true  
       },
 	# I could not make all the riak attributes work when putting them in here instead I have changed the riak cookbook attributes/default.rb
 	:riak => {:config => {
@@ -71,7 +71,6 @@ Vagrant::Config.run do |config|
 		}
       },
       :java => {
-	:arch => "x86_64",
         :install_flavor => "oracle",
 	:oracle => {
        	  "accept_oracle_download_terms" => true
