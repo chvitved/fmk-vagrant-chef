@@ -27,7 +27,7 @@ task fmk() << {
 }
 
 task sdmFetch() << {
-	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/"
+	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/104/artifact/"
 	fetchFile(urlBase + "target/fmk-stamdata-modulet.war")
     fetchFile(urlBase + "target/oiosaml.zip")	
 	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-stamdata-modulet')
