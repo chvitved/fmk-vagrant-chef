@@ -27,9 +27,9 @@ task fmk() << {
 }
 
 task sdmFetch() << {
-	def urlBase = jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/104/artifact/"
-	fetchFile(urlBase + "target/fmk-stamdata-modulet.war")
-    fetchFile(urlBase + "target/oiosaml.zip")	
+	def url = "http://nexus.ci82.trifork.com/service/local/artifact/maven/redirect?r=snapshots&g=dk.fmkonline&a=fmk-stamdata-modulet&v=1.0-SNAPSHOT&p=war"
+	fetchFile(url, workingDir, "fmk-stamdata-modulet.war")
+	fetchFile(jenkinsUrl + "/job/stamdata-modulet_(SDM_rest)/lastSuccessfulBuild/artifact/target/oiosaml.zip")	
 	moveOioSaml(workingDir + 'oiosaml.zip', '.oiosaml-stamdata-modulet')
 }
 
@@ -76,8 +76,13 @@ void exec(command, failOnError=true, dir=workingDir) {
 	}
 }
 
-File fetchFile(address, dir=workingDir) {
-	def file = new File(dir + address.tokenize("/")[-1])
+File fetchFile(address, dir=workingDir, name=null) {
+    if (name == null) {
+    	name = dir + address.tokenize("/")[-1]
+    } else {
+    	name = dir + name
+    }
+    def file = new File(name)
     def fos = new FileOutputStream(file)
     def out = new BufferedOutputStream(fos)
     def url = new URL(address)

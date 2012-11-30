@@ -36,7 +36,7 @@ Vagrant::Config.run do |config|
   # folder, and the third is the path on the host to the actual folder.
   # props are loaded at the top from the file myconfig
   config.vm.share_folder "projects", "/projects", props[:projects]
-  config.vm.share_folder "ivy", "/home/vagrant/.ivy2", props[:ivy2]
+  config.vm.share_folder "ivy", "/home/vagrant/.ivy2", props[:ivy2] 
   #config.vm.share_folder "v-root", "/vagrant", "."
   
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
@@ -47,12 +47,11 @@ Vagrant::Config.run do |config|
     chef.add_recipe "riak"
     chef.add_recipe "default" # default start risk as there is a bug. riak cookbook at github blames this on the chef version
     chef.add_recipe "java"
+    chef.add_recipe "trifork-t4-4.1.35"
+    chef.add_recipe "fmk"
     chef.add_recipe "ant"
     chef.add_recipe "gradle::tarball" 
-    chef.add_recipe "mysql::server"
-
-   chef.add_recipe "trifork-t4-4.1.35"
-   chef.add_recipe "fmk"
+    chef.add_recipe "mysql::server"  
    chef.add_recipe "timezone"
    chef.add_recipe "ntp"
  
